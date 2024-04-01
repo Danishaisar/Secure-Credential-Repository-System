@@ -16,18 +16,22 @@
                 <div class="p-6">
                     <div class="mb-6">
                         <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
-                        <input type="text" name="name" id="name" value="{{ old('name', $credential->name) }}" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        <input type="text" name="name" id="name" value="{{ old('name', $credential->name) }}" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                     </div>
                     
                     <div class="mb-6">
                         <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
-                        <input type="text" name="username" id="username" value="{{ old('username', $credential->username) }}" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        <input type="text" name="username" id="username" value="{{ old('username', $credential->username) }}" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                     </div>
 
                     <div class="mb-6">
                         <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
-                        <input type="password" name="password" id="password" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="New Password">
+                        <input type="password" name="password" id="password" placeholder="Leave blank to keep current password" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    </div>
 
+                    <div class="mb-6">
+                        <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+                        <textarea name="description" id="description" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">{{ old('description', $credential->description) }}</textarea>
                     </div>
                 </div>
 

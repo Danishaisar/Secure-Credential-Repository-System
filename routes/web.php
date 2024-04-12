@@ -3,6 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\HomeController; // Added HomeController import
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\CredentialController;
+use App\Http\Controllers\AdminController;
 
 // Home route
 Route::get('/', function () {

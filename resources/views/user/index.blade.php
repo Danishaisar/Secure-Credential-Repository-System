@@ -27,7 +27,6 @@
                         <td class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ $user->name }}</td>
                         <td class="py-4 px-6 text-center">
                             <a href="{{ route('admin.users.show', $user) }}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">View</a>
-                            <a href="{{ route('admin.users.edit', $user) }}" class="font-medium text-yellow-600 dark:text-yellow-500 hover:underline mx-2">Edit</a>
                             <form action="{{ route('admin.users.destroy', $user) }}" method="POST" class="inline">
                                 @csrf
                                 @method('DELETE')

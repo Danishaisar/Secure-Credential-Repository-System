@@ -1,11 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\CredentialController;
-use App\Http\Controllers\AdminController;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\HomeController; // Added HomeController import
 
 // Home route
 Route::get('/', function () {
@@ -37,6 +34,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('credentials', CredentialController::class)->except(['show']);
     // Explicitly defining the "show" route for credentials to distinguish between user and admin views
     Route::get('/credentials/{credential}', [CredentialController::class, 'show'])->name('credentials.show')->middleware('can:view,credential');
+
+    // QR Code MFA Verification
+    Route::post('mfa/verify-qr', [AuthenticatedSessionController::class, 'verifyQrCode'])->name('mfa.verifyQr');
+
+    // Route for displaying QR code verification form
+    Route::get('mfa/verify-qr-code', function () {
+        return view('auth.qr-code-verify');
+    })->name('mfa.verifyQrCodeForm');
+
+    // Route for handling submission of QR code verification form
+    Route::post('mfa/verify-qr-code', [AuthenticatedSessionController::class, 'verifyQrCode'])->name('mfa.submitQrCodeVerification');
 });
 
 // Admin-specific Routes

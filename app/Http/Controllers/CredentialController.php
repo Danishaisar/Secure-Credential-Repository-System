@@ -76,6 +76,7 @@ class CredentialController extends Controller
                 'required',
                 'string',
                 'max:255',
+                // Ensure username is unique for the user excluding the current credential
                 Rule::unique('credentials')->where(function ($query) use ($credential) {
                     return $query->where('user_id', Auth::id())->where('id', '!=', $credential->id);
                 }),
@@ -84,11 +85,13 @@ class CredentialController extends Controller
             'description' => 'required|string',
         ]);
 
-        $credential->name = $request->name;
-        $credential->username = $request->username;
-        $credential->description = $request->description;
+        $credential->fill([
+            'name' => $request->name,
+            'username' => $request->username,
+            'description' => $request->description,
+        ]);
 
-        if (!empty($request->password)) {
+        if ($request->filled('password')) {
             $credential->password = Hash::make($request->password);
         }
 

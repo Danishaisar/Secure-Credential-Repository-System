@@ -4,15 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
-use App\Mail\CredentialsMail;
+use App\Mail\SendCredentialAccessLink; // Make sure to use the correct name of the mail class
 use Illuminate\Support\Facades\Mail;
 
 class AdminController extends Controller
 {
     public function index()
     {
-        // Assuming 'role' is the column name and 'user' signifies a non-admin user.
-        // Adjust the 'user' value based on your actual non-admin role identifier.
         $users = User::where('role', '<>', 'admin')->get();
         return view('user.index', compact('users'));
     }
@@ -29,9 +27,8 @@ class AdminController extends Controller
             'email' => 'required|email|unique:users',
             'password' => 'required|min:8',
         ]);
-        
+
         $validatedData['password'] = bcrypt($validatedData['password']);
-        
         User::create($validatedData);
 
         return redirect()->route('admin.users.index')->with('success', 'User created successfully.');
@@ -53,9 +50,8 @@ class AdminController extends Controller
             'name' => 'required|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
         ]);
-        
-        $user->update($validatedData);
 
+        $user->update($validatedData);
         return redirect()->route('admin.users.index')->with('success', 'User updated successfully.');
     }
 
@@ -67,22 +63,23 @@ class AdminController extends Controller
 
     public function showCredentials(User $user)
     {
-        $credentials = $user->credentials; // Make sure this relationship exists in your User model
+        $credentials = $user->credentials; // Ensure this relationship exists
         return view('admin.show_credentials', compact('user', 'credentials'));
     }
 
     public function markUserAsDeceased(User $user)
-{
-    // Mark the user as deceased in the database
-    $user->is_deceased = true;
-    $user->save();
+    {
+        // Mark the user as deceased in the database
+        $user->is_deceased = true;
+        $user->save();
 
-    // Assuming you have a method on the User model to fetch credentials
-    $credentials = $user->credentials;
+        // Generate a secure access link for the close kin
+        $token = $user->generateSecureAccessLink();
+        $link = route('kin.access', ['user' => $user->id, 'token' => $token]);
 
-    // Now, implement step 3: Send an email to the close kin with the credentials
-    Mail::to($user->close_kin_email)->send(new CredentialsMail($user, $credentials));
+        // Send an email with the secure link instead of credentials directly
+        Mail::to($user->close_kin_email)->send(new SendCredentialAccessLink($link));
 
-    return back()->with('success', 'User marked as deceased and credentials sent to close kin.');
-}
+        return back()->with('success', 'User marked as deceased and secure link sent to close kin.');
+    }
 }

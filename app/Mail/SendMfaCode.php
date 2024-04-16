@@ -10,6 +10,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 class SendMfaCode extends Mailable
 {
     use Queueable, SerializesModels;
+    
 
     public $code;
 

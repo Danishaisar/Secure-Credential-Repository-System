@@ -12,28 +12,32 @@ class SendCredentialAccessLink extends Mailable
     use Queueable, SerializesModels;
 
     public $link;
+    public $userName; // Variable to hold the name of the user
+    public $emails; // Array of emails
 
     /**
      * Create a new message instance.
      *
-     * @param string $link The secure link for close kin to access credentials
+     * @param array $emails Array of email addresses for recipients
+     * @param string $link The secure link for recipients to access credentials
+     * @param string $userName The name of the user
      */
-    public function __construct(string $link)
+    public function __construct(array $emails, string $link, string $userName)
     {
+        $this->emails = $emails;
         $this->link = $link;
+        $this->userName = $userName; // Assigning the user name
     }
 
     /**
      * Build the message.
      *
-     * This method returns the mailable object configured to send an email
-     * with a subject line and using a markdown template.
-     *
      * @return $this
      */
     public function build()
     {
-        return $this->subject('Access Credentials Link')
-                    ->markdown('emails.credentialsAccessLink', ['link' => $this->link]);
+        return $this->to($this->emails)
+            ->subject('Access Credentials Link')
+            ->view('emails.credentialsAccessLink');
     }
 }

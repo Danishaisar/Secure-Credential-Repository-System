@@ -22,7 +22,11 @@ class HomeController extends Controller
      */
     public function handleDashboard()
     {
-        if (Auth::user()->role === 'admin') {
+        $role = Auth::user()->role;
+        
+        if ($role === 'superadmin') {
+            return $this->superAdminDashboard();
+        } elseif ($role === 'admin') {
             return $this->adminDashboard();
         }
         return $this->userDashboard();
@@ -48,7 +52,20 @@ class HomeController extends Controller
             // Redirect users who are not admins
             return redirect('/dashboard')->with('error', 'You do not have access to this area.');
         }
-
         return view('admin.dashboard');
+    }
+
+    /**
+     * Show the super admin dashboard.
+     * Only allow superadmins to access this page.
+     * @return \Illuminate\View\View
+     */
+    public function superAdminDashboard()
+    {
+        if (Auth::user()->role !== 'superadmin') {
+            // Redirect users who are not superadmins
+            return redirect('/dashboard')->with('error', 'You do not have access to this area.');
+        }
+        return view('superadmin.dashboard');
     }
 }

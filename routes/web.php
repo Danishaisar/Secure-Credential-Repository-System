@@ -6,6 +6,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CredentialController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\SuperAdminController;
 use App\Http\Controllers\CredentialAccessController;
 
 // Home route
@@ -16,18 +17,17 @@ Route::get('/', function () {
 // Authentication Routes...
 require __DIR__.'/auth.php';
 
-// Unified Dashboard Route
+// Unified Dashboard Route for different user roles
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/dashboard', function () {
-        if (Auth::user()->role === 'admin') {
-            return app(HomeController::class)->adminDashboard();
-        }
-        return app(HomeController::class)->userDashboard();
-    })->name('user.dashboard');
+    Route::get('/dashboard', [HomeController::class, 'handleDashboard'])->name('user.dashboard');
 
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile/destroy', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Family Information Management Routes
+    Route::get('/user/family', [ProfileController::class, 'manageFamily'])->name('user.family.manage');
+    Route::put('/user/family', [ProfileController::class, 'updateFamilyInfo'])->name('user.family.update');
 
     Route::resource('credentials', CredentialController::class)->except(['show']);
     Route::get('/credentials/{credential}', [CredentialController::class, 'show'])
@@ -50,15 +50,20 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::put('/admin/users/{user}', [AdminController::class, 'update'])->name('admin.users.update');
     Route::delete('/admin/users/{user}', [AdminController::class, 'destroy'])->name('admin.users.destroy');
     Route::get('/admin/users/{user}', [AdminController::class, 'show'])->name('admin.users.show');
-
     Route::post('/admin/users/{user}/deceased', [AdminController::class, 'markUserAsDeceased'])->name('admin.users.deceased');
     Route::get('/admin/credentials/{credential}', [AdminController::class, 'showCredentialDetails'])->name('admin.credentials.show');
     Route::get('/admin/users/{user}/credentials', [AdminController::class, 'showCredentials'])->name('admin.users.credentials.show');
 });
 
+// SuperAdmin-specific Routes
+Route::middleware(['auth', 'verified', 'superadmin'])->group(function () {
+    Route::get('/superadmin/dashboard', [SuperAdminController::class, 'index'])->name('superadmin.dashboard');
+    Route::get('/superadmin/family-info', [SuperAdminController::class, 'viewFamilyInfo'])->name('superadmin.family.index');
+    Route::put('/superadmin/family-info/{id}/verify', [SuperAdminController::class, 'verifyFamilyInfo'])->name('superadmin.family.verify'); // Added verification route
+});
+
 // Route for close kin to access credentials
 Route::get('/kin/access/{user}/{token}', [CredentialAccessController::class, 'accessCredentials'])->name('kin.access');
 
-// Middleware to ensure user is an admin
-// Ensure this middleware is defined in app/Http/Kernel.php:
-// 'admin' => \App\Http\Middleware\AdminMiddleware::class,
+// Route for close kin to access credentials and show secure credentials
+Route::get('/kin/secure-credentials/{user}/{token}', [CredentialAccessController::class, 'showSecureCredentials'])->name('kin.secureCredentials');

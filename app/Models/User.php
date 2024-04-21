@@ -66,6 +66,11 @@ class User extends Authenticatable
         return $token;
     }
 
+    public function familyInfo()
+    {
+        return $this->hasOne(FamilyInfo::class);
+    }
+
     // Validate the token
     public function tokenIsValid($token)
     {

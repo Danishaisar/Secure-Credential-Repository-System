@@ -22,16 +22,14 @@
         h1 {
             color: #444;
         }
-        .button {
-            display: block;
-            width: fit-content;
-            background: #4CAF50;
-            color: white;
-            padding: 10px 20px;
-            text-align: center;
-            border-radius: 5px;
-            text-decoration: none;
-            margin: 20px 0;
+        .credential {
+            background: #e7e7e7;
+            border-radius: 4px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        .credential:not(:last-child) {
+            margin-bottom: 15px;
         }
         .footer {
             margin-top: 20px;
@@ -42,12 +40,14 @@
 </head>
 <body>
     <div class="container">
-        <h1>Access to Credentials</h1>
-        <p>You have been granted temporary access to view credentials. Please click the button below to view the information securely.</p>
-        <a href="{{ $link }}" class="button">Access Credentials</a>
+        <h1>Access Credentials for {{ $userName }}</h1>
+        <p>You, as a close kin, have been granted temporary access to view credentials for {{ $userName }} who has passed away. Please click the button below to securely view the information:</p>
+        <button style="background-color: #4CAF50; color: white; padding: 10px 20px; text-align: center; border: none; border-radius: 5px; text-decoration: none; display: inline-block; margin: 20px 0;">
+         <a href="{{ $link }}" style="color: white; text-decoration: none;">Access Credentials</a>
+        </button>
         <p>This link will expire in 24 hours.</p>
         <div class="footer">
-            <p>If you have any questions or did not expect to receive this information, please contact our support team immediately at support@example.com.</p>
+            <p>If you have any questions or did not expect to receive this information, please contact our support team immediately at <a href="mailto:support@example.com">support@example.com</a>.</p>
         </div>
     </div>
 </body>

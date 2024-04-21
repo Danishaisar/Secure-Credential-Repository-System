@@ -45,14 +45,6 @@
             @endif
         </div>
 
-        <!-- Close Kin Email Input -->
-        <div class="space-y-2">
-            <x-form.label for="close_kin_email" :value="__('Close Kin Email')" />
-            <x-form.input id="close_kin_email" name="close_kin_email" type="email" class="block w-full"
-                          :value="old('close_kin_email', auth()->user()->close_kin_email)" />
-            <x-form.error :messages="$errors->get('close_kin_email')" />
-        </div>
-
         <!-- Submit Button -->
         <div class="flex items-center gap-4">
             <x-button>{{ __('Save') }}</x-button>

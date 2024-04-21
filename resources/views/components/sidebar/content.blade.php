@@ -1,5 +1,4 @@
 <x-perfect-scrollbar as="nav" aria-label="main" class="flex flex-col flex-1 gap-4 px-3">
-    
     <!-- Existing Dashboard Link -->
     <x-sidebar.link
         title="Dashboard"
@@ -20,21 +19,33 @@
             :isActive="request()->routeIs('credentials.index')"
         >
         </x-sidebar.link>
-        @elseif(Auth::user()->role === 'admin')
-    <!-- Links visible to admin users -->
-    <x-sidebar.link
-        title="User Management"
-        href="{{ route('admin.users.index') }}"
+        
+        <!-- Family Info Link -->
+        <x-sidebar.link
+            title="Family Info"
+            href="{{ route('user.family.manage') }}"
+            :isActive="request()->routeIs('user.family.manage')"
+        >
+        </x-sidebar.link>
+    @endif
+
+    @if(Auth::user()->role === 'admin')
+        <!-- Links visible to admin users -->
+        <x-sidebar.link
+            title="User Management"
+            href="{{ route('admin.users.index') }}"
             :isActive="request()->routeIs('admin.users.index')"
-    >
-    </x-sidebar.link>
+        >
+        </x-sidebar.link>
+    @endif
 
-    <x-sidebar.link
-        title="User Credentials"
-       
-    >
-    </x-sidebar.link>
-@endif
-
-
+    @if(Auth::user()->role === 'superadmin')
+        <!-- Links visible to superadmin users -->
+        <x-sidebar.link
+            title="User Family Info"
+            href="{{ route('superadmin.family.index') }}"  
+            :isActive="request()->routeIs('admin.family.index')"
+        >
+        </x-sidebar.link>
+    @endif
 </x-perfect-scrollbar>

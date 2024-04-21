@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
-use App\Mail\SendCredentialAccessLink; // Make sure to use the correct name of the mail class
+use App\Mail\SendCredentialAccessLink;
 use Illuminate\Support\Facades\Mail;
 
 class AdminController extends Controller
@@ -73,12 +73,30 @@ class AdminController extends Controller
         $user->is_deceased = true;
         $user->save();
 
+        // Fetch emails from the family_info table
+        $familyInfo = $user->familyInfo;
+        $emails = [];
+        if ($familyInfo) {
+            $emails = array_filter([
+                $familyInfo->kin_email_1,
+                $familyInfo->kin_email_2,
+                $familyInfo->kin_email_3
+            ]);
+        }
+
+        if (empty($emails)) {
+            return back()->with('error', 'No kin emails available to send the credentials.');
+        }
+
         // Generate a secure access link for the close kin
         $token = $user->generateSecureAccessLink();
         $link = route('kin.access', ['user' => $user->id, 'token' => $token]);
+        
+        // Pass the deceased user's name to the mail constructor
+        $userName = $user->name;
 
         // Send an email with the secure link instead of credentials directly
-        Mail::to($user->close_kin_email)->send(new SendCredentialAccessLink($link));
+        Mail::to($emails)->send(new SendCredentialAccessLink($emails, $link, $userName));
 
         return back()->with('success', 'User marked as deceased and secure link sent to close kin.');
     }

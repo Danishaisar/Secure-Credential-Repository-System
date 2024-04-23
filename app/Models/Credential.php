@@ -4,33 +4,46 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Crypt;
 
 class Credential extends Model
 {
     use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
         'name',
+        'username',
+        'password',
         'description',
-        'username', // Assuming you're adding a username field
-        'password', // Assuming you're adding a password field
-        // You can add any other new attributes here
     ];
 
     /**
-     * Get the user that owns the credential.
+     * Automatically decrypt password when retrieved.
+     *
+     * @param  string  $value
+     * @return string
      */
-    public function user()
+    public function getPasswordAttribute($value)
     {
-        return $this->belongsTo(User::class);
+        try {
+            return Crypt::decryptString($value);
+        } catch (\Exception $e) {
+            // Log the exception or handle the error as per your requirements
+            \Log::error("Error decrypting password: " . $e->getMessage());
+            // Return an empty string or handle as needed
+            return '';
+        }
     }
 
-    // If you plan to use Laravel's default authentication system for these credentials in the future,
-    // you might also want to implement the \Illuminate\Contracts\Auth\Authenticatable in a custom way
-    // or use a separate auth guard for these credentials.
+    /**
+     * Automatically encrypt password before saving to the database.
+     *
+     * @param  string  $value
+     */
+    public function setPasswordAttribute($value)
+    {
+        if (!empty($value)) {
+            $this->attributes['password'] = Crypt::encryptString($value);
+        }
+    }
 }

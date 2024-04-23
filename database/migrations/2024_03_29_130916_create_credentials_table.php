@@ -13,11 +13,10 @@ return new class extends Migration
     {
         Schema::create('credentials', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->string('name');
-            $table->text('description');
-            // Add more fields as necessary
-            $table->timestamps();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Ensures foreign key constraint with cascading delete
+            $table->string('name'); // For the name of the credential
+            $table->text('description'); // Description of the credential, stored as text
+            $table->timestamps(); // Automatically manage created and updated timestamps
         });
     }
 

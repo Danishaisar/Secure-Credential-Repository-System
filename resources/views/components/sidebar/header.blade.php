@@ -1,13 +1,15 @@
 <div class="flex items-center justify-between flex-shrink-0 px-3">
     <!-- Logo -->
     <a
-        href="{{ route('user.dashboard') }}"
-        class="inline-flex items-center gap-2"
-    >
-        <x-application-logo aria-hidden="true" class="w-10 h-auto" />
+    href="{{ route('user.dashboard') }}"
+    class="inline-flex items-center gap-2"
+>
+    <!-- Replace x-application-logo with your custom logo image -->
+    <img src="{{ asset('images/scrs_logo.png') }}" alt="Dashboard Logo" class="w-10 h-auto" aria-hidden="true" />
 
-        <span class="sr-only">Dashboard</span>
-    </a>
+    <span class="sr-only">Dashboard</span>
+</a>
+
 
     <!-- Toggle button -->
     <x-button

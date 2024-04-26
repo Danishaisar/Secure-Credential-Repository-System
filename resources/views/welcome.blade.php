@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Secure Credential</title>
+    <script src="//unpkg.com/alpinejs" defer></script>
 
     <!-- Favicon -->
     <link rel="icon" href="{{ asset('images/scrs_logo.png') }}" type="image/png">
@@ -16,6 +17,8 @@
 
     <!-- Additional styles specific to this page -->
     <style>
+        /* Existing styles ... */
+
         body, html {
             height: 100%;
             margin: 0;
@@ -71,15 +74,16 @@
         }
 
         .feature-box {
-            background-color: #ffffff;
+            background-color: rgba(0, 0, 0, 0.5); /* Black background with 50% opacity */
             padding: 30px;
             border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1); /* Soft shadow for depth */
+            color: #fff; /* Text color to white for better visibility */
         }
 
         .feature-box h3 {
             font-size: 1.5rem;
-            color: #333333;
+            color:#fff;
             margin-top: 0;
         }
 
@@ -147,6 +151,23 @@
         .btn-secondary:hover {
             background-color: #7C3AED;
         }
+
+        .feature-box:hover {
+            transform: translateY(-5px); /* Feature box hover effect */
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+         /* Transition for smooth hover effects */
+         .btn-primary, .btn-secondary, .feature-box {
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+        }
+
+        .action-buttons-container {
+        display: flex; /* Use flexbox to center children */
+        justify-content: center; /* Horizontally center the content */
+        padding-top: 20px;
+        margin-top: 20px; /* Or any other value for spacing from the feature boxes */
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -155,15 +176,9 @@
     <div class="container mx-auto">
         <div class="hero-section">
             <div>
-            <h1>Welcome to <strong>Secure Credential</strong></h1>
+                <h1>Welcome to <strong>Secure Credential</strong></h1>
+                <p>Simplify your life with our Secure Credential Repository System. Manage, organize, and transfer your credentials effortlessly. Dive in and register now for seamless security!</p>
 
-                <p>Experience simplicity and security with Secure Credential Repository System! Easily manage, organize, and transfer your credentials. Simplify your security, simplify your life.</p>
-                <div class="action-buttons mt-4">
-    <a href="{{ route('login') }}" class="btn-primary">Log in</a>
-    @if (Route::has('register'))
-        <a href="{{ route('register') }}" class="btn-secondary ml-2">Register</a>
-    @endif
-</div>
             </div>
             <div class="hero-image">
                 <img src="{{ asset('images/scrs_logo2.png') }}" alt="Secure Credential Logo" class="rounded-lg shadow-lg">
@@ -171,31 +186,65 @@
         </div>
 
         <div class="feature-box-container">
-    <div class="feature-box">
-        <div class="flex items-center justify-center mb-4">
-            <i class="fas fa-rocket text-purple-500 text-3xl mr-2"></i>
-            <h3 class="font-bold text-xl">Push to Deploy</h3>
-        </div>
-        <p>Effortlessly deploy your applications with just a push. Streamline your development process and get your code into production faster.</p>
-    </div>
+            <!-- Feature box with Alpine.js for interactivity -->
+            <div class="feature-box" x-data="{ open: false }">
+                <div @click="open = !open" class="flex items-center justify-center mb-4 cursor-pointer">
+                <img src="{{ asset('images/icon6.png') }}" alt="Push to Deploy" class="w-16 h-16 mr-2"> <!-- Add your PNG image here -->
+                    <i class="fas fa-rocket text-purple-500 text-3xl mr-2"></i>
+                    <h3 class="font-bold text-xl">Secure Credential</h3>
+                </div>
+                <p x-show="open" x-collapse class="transition-all duration-500" style="display: none;">
+                    Learn more about our seamless deployment process that helps you deliver applications with ease and efficiency.
+                </p>
+                <p x-show="!open">
+                Centralize and manage your credentials with ease using our Secure Credential Repository System (SCRS), streamlining access and enhancing security measures.
+                </p>
+            </div>
 
-    <div class="feature-box">
-        <div class="flex items-center justify-center mb-4">
-            <i class="fas fa-shield-alt text-purple-500 text-3xl mr-2"></i>
-            <h3 class="font-bold text-xl">Multifactor Authentication</h3>
-        </div>
-        <p>Enhance the security of your account with multifactor authentication. Protect your sensitive information from unauthorized access.</p>
-    </div>
+            <div class="feature-box" x-data="{ open: false }">
+                <div @click="open = !open" class="flex items-center justify-center mb-4 cursor-pointer">
+                <img src="{{ asset('images/icon4.png') }}" alt="Push to Deploy" class="w-16 h-16 mr-2"> <!-- Add your PNG image here -->
+                    <i class="fas fa-rocket text-purple-500 text-3xl mr-2"></i>
+                    <h3 class="font-bold text-xl">Multifactor Authentication</h3>
+                </div>
+                <p x-show="open" x-collapse class="transition-all duration-500" style="display: none;">
+                    Learn more about our seamless deployment process that helps you deliver applications with ease and efficiency.
+                </p>
+                <p x-show="!open">
+                Ensure top-tier security with multiple layers of authentication, safeguarding your data from unauthorized access.
+                </p>
+            </div>
 
-    <div class="feature-box">
-        <div class="flex items-center justify-center mb-4">
-            <i class="fas fa-lock text-purple-500 text-3xl mr-2"></i>
-            <h3 class="font-bold text-xl">Safely Encrypted</h3>
+            <div class="feature-box" x-data="{ open: false }">
+                <div @click="open = !open" class="flex items-center justify-center mb-4 cursor-pointer">
+                <img src="{{ asset('images/icon5.png') }}" alt="Push to Deploy" class="w-16 h-16 mr-2"> <!-- Add your PNG image here -->
+                    <i class="fas fa-rocket text-purple-500 text-3xl mr-2"></i>
+                    <h3 class="font-bold text-xl">Safely Encrypted</h3>
+                </div>
+                <p x-show="open" x-collapse class="transition-all duration-500" style="display: none;">
+                    Learn more about our seamless deployment process that helps you deliver applications with ease and efficiency.
+                </p>
+                <p x-show="!open">
+                Rest easy knowing your credentials are protected with robust encryption, keeping them safe from prying eyes.
+                </p>
+            </div>
+</div>
+
+            <!-- Repeat the structure for other feature boxes -->
+            <!-- ... -->
+
         </div>
-        <p>Your data is safely encrypted to ensure confidentiality and integrity. Rest assured that your information remains protected at all times.</p>
+        
+        <div class="action-buttons-container">
+        <div class="action-buttons">
+        <a href="{{ route('login') }}" class="btn-primary">Log in</a>
+        @if (Route::has('register'))
+            <a href="{{ route('register') }}" class="btn-secondary ml-2">Register</a>
+        @endif
     </div>
 </div>
     </div>
+    
 </div>
 
 </body>

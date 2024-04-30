@@ -6,6 +6,11 @@ use App\Models\Credential;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\CredentialUpdatedNotification;
+
+
+
 
 class CredentialController extends Controller
 {
@@ -53,34 +58,43 @@ class CredentialController extends Controller
     }
 
     public function update(Request $request, Credential $credential)
-    {
-        $this->authorize('update', $credential);
+{
+    $this->authorize('update', $credential);
 
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'username' => [
-                'required',
-                'string',
-                'max:255',
-                Rule::unique('credentials')->ignore($credential->id)->where('user_id', Auth::id())
-            ],
-            'password' => 'nullable|string|min:6',
-            'description' => 'required|string',
-        ]);
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'username' => [
+            'required',
+            'string',
+            'max:255',
+            Rule::unique('credentials')->ignore($credential->id)->where(function ($query) {
+                return $query->where('user_id', Auth::id());
+            }),
+        ],
+        'password' => 'nullable|string|min:6',
+        'description' => 'required|string',
+    ]);
 
-        $credential->name = $request->name;
-        $credential->username = $request->username;
-        $credential->description = $request->description;
+    $credential->update($request->only('name', 'username', 'description'));
 
-        if ($request->filled('password')) {
-            // No need to manually encrypt the password here, it's handled by the model
-            $credential->password = $request->password;
-        }
-
-        $credential->save();
-
-        return redirect()->route('credentials.index')->with('success', 'Credential updated successfully.');
+    if ($request->filled('password')) {
+        $credential->password = $request->password;  // This should be handled in the model with mutator
     }
+
+    // After the credential is saved, send a notification
+    $user = Auth::user();
+    $familyInfo = $user->familyInfo;
+    if ($familyInfo) {
+        $emails = collect([$familyInfo->kin_email_1, $familyInfo->kin_email_2, $familyInfo->kin_email_3])
+                        ->filter();
+        foreach ($emails as $email) {
+            Notification::route('mail', $email)
+                        ->notify(new CredentialUpdatedNotification($credential, $user));
+        }
+    }
+
+    return redirect()->route('credentials.index')->with('success', 'Credential updated successfully.');
+}
 
     public function destroy(Credential $credential)
     {

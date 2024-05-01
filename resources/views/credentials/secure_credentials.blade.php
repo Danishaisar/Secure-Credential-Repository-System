@@ -120,28 +120,26 @@
             <h5 class="card-title">Username: {{ $credential->username }}</h5>
             <div class="password-wrapper">
                 <input class="password" type="password" value="{{ $credential->password }}" id="password-{{ $credential->id }}" readonly>
-                <button class="toggle-password" onclick="togglePasswordVisibility({{ $credential->id }})">Show</button>
+                <button class="toggle-password" onclick="togglePasswordVisibility('{{ $credential->id }}')">Show</button>
             </div>
         </div>
     </div>
-    @endforeach
+@endforeach
     <div class="footer">
         Please contact support@example.com if you have any issues or questions.
     </div>
 </div>
 <script>
-    function togglePasswordVisibility(id) {
-        var passwordInput = document.getElementById('password-' + id);
-        var toggleButton = event.target;
-        
-        if (passwordInput.type === 'password') {
-            passwordInput.type = 'text';
-            toggleButton.textContent = 'Hide';
-        } else {
-            passwordInput.type = 'password';
-            toggleButton.textContent = 'Show';
-        }
+   function togglePasswordVisibility(id) {
+    var passwordInput = document.getElementById('password-' + id);
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        event.target.textContent = 'Hide';
+    } else {
+        passwordInput.type = 'password';
+        event.target.textContent = 'Show';
     }
+}
 </script>
 </body>
 </html>

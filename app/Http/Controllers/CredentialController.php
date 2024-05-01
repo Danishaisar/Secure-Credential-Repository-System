@@ -59,40 +59,43 @@ class CredentialController extends Controller
 
     public function update(Request $request, Credential $credential)
 {
-    $this->authorize('update', $credential);
-
     $request->validate([
         'name' => 'required|string|max:255',
         'username' => [
             'required',
             'string',
             'max:255',
-            Rule::unique('credentials')->ignore($credential->id)->where(function ($query) {
-                return $query->where('user_id', Auth::id());
-            }),
+            Rule::unique('credentials')->ignore($credential->id)->where('user_id', Auth::id()),
         ],
         'password' => 'nullable|string|min:6',
         'description' => 'required|string',
     ]);
 
+    // Update credential details
     $credential->update($request->only('name', 'username', 'description'));
 
+    // Update the password only if a new one is provided
     if ($request->filled('password')) {
-        $credential->password = $request->password;  // This should be handled in the model with mutator
+        $credential->password = $request->password;
+        $credential->save();
     }
 
-    // After the credential is saved, send a notification
-    $user = Auth::user();
-    $familyInfo = $user->familyInfo;
+    // Retrieve user's family info
+    $familyInfo = Auth::user()->familyInfo;
+
+    // Notify the user
+    Notification::route('mail', Auth::user()->email)->notify(new CredentialUpdatedNotification($credential, Auth::user()));
+
+    // Notify close kin if family info exists
     if ($familyInfo) {
-        $emails = collect([$familyInfo->kin_email_1, $familyInfo->kin_email_2, $familyInfo->kin_email_3])
-                        ->filter();
-        foreach ($emails as $email) {
-            Notification::route('mail', $email)
-                        ->notify(new CredentialUpdatedNotification($credential, $user));
+        $kinEmails = collect([$familyInfo->kin_email_1, $familyInfo->kin_email_2, $familyInfo->kin_email_3])
+                      ->filter();
+
+        foreach ($kinEmails as $email) {
+            Notification::route('mail', $email)->notify(new CredentialUpdatedNotification($credential, Auth::user()));
         }
     }
-
+    
     return redirect()->route('credentials.index')->with('success', 'Credential updated successfully.');
 }
 

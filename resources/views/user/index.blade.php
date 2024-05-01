@@ -2,48 +2,75 @@
     <x-slot name="header">
     </x-slot>
 
-    <div class="container mx-auto px-4 py-8">
-        <div class="flex justify-between items-center mb-8">
-            <h3 class="text-3xl font-extrabold text-gray-800">{{ __("User Management") }}</h3>
-            <a href="{{ route('admin.users.create') }}" class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white font-semibold rounded-full shadow-lg hover:from-green-600 hover:to-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-150 ease-in-out">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+    <!-- Container -->
+    <div class="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+        <!-- Header Section -->
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white">{{ __("User Management") }}</h1>
+            <a href="{{ route('admin.users.create') }}" class="flex items-center px-4 py-2 bg-purple-600 hover:bg-purple-700 focus:ring-purple-500 focus:ring-offset-2 focus:outline-none focus:ring-2 transition duration-150 ease-in-out text-white font-semibold rounded-md shadow">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
                 </svg>
                 Add User
             </a>
         </div>
 
-        <div class="overflow-x-auto relative shadow-md sm:rounded-lg">
-            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                    <tr>
-                        <th scope="col" class="py-3 px-6">Name</th>
-                        <th scope="col" class="py-3 px-6 text-center">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($users as $user)
-                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                        <td class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ $user->name }}</td>
-                        <td class="py-4 px-6 text-center">
-                            <a href="{{ route('admin.users.show', $user) }}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">View</a>
-                            <form action="{{ route('admin.users.destroy', $user) }}" method="POST" class="inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="font-medium text-red-600 dark:text-red-500 hover:underline" onclick="return confirm('Are you sure you want to delete this user?');">Delete</button>
-                            </form>
-                            <!-- Mark as Deceased Button -->
-                            <form action="{{ route('admin.users.deceased', $user) }}" method="POST" class="inline">
-                                @csrf
-                                <button type="submit" class="font-medium text-purple-600 dark:text-purple-500 hover:underline mx-2" onclick="return confirm('Are you sure? This will send the user\'s credentials to their close kin.');">
-                                    Mark as Deceased
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
+        <!-- Active Users Table -->
+        <div class="bg-white dark:bg-gray-800 overflow-hidden shadow sm:rounded-lg">
+            <div class="px-4 py-5 sm:p-6">
+                <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">Active Users</h3>
+                <div class="mt-2 max-w-xl text-sm text-gray-500 dark:text-gray-400">
+                    <p>Manage your application's active users.</p>
+                </div>
+
+                <div class="mt-5">
+                    <ul class="bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-md">
+                        @foreach ($users as $user)
+                        <li class="px-4 py-4 sm:px-6">
+                            <div class="flex items-center justify-between">
+                                <p class="text-sm font-medium text-gray-900 dark:text-white truncate">{{ $user->name }}</p>
+                                <div class="ml-2 flex-shrink-0 flex">
+                                    <a href="{{ route('admin.users.show', $user) }}" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">View</a>
+                                    <form action="{{ route('admin.users.destroy', $user) }}" method="POST" class="ml-4">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800" onclick="return confirm('Are you sure you want to delete this user?');">Delete</button>
+                                    </form>
+                                    <form action="{{ route('admin.users.deceased', $user) }}" method="POST" class="ml-4">
+                                        @csrf
+                                        <button type="submit" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                            Mark as Deceased
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </li>
+                        @endforeach
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Deceased Users Table -->
+        <div class="bg-white dark:bg-gray-800 mt-8 overflow-hidden shadow sm:rounded-lg">
+            <div class="px-4 py-5 sm:p-6">
+                <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">Deceased Users</h3>
+                <div class="mt-2 max-w-xl text-sm text-gray-500 dark:text-gray-400">
+                    <p>View users marked as deceased.</p>
+                </div>
+
+                <div class="mt-5">
+                    <ul class="bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-md">
+                        @foreach ($deceasedUsers as $deceasedUser)
+                        <li class="px-4 py-4 sm:px-6">
+                            <div class="flex items-center justify-between">
+                                <p class="text-sm font-medium text-gray-900 dark:text-white truncate">{{ $deceasedUser->name }}</p>
+                            </div>
+                        </li>
+                        @endforeach
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
 </x-app-layout>

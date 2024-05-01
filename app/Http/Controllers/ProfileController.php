@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Mail\KinRegistrationNotification;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 
@@ -90,11 +92,29 @@ class ProfileController extends Controller
             'relation_3' => 'nullable|string|max:255', // Validation for relation_3
             'additional_info' => 'nullable|string|max:1000'
         ]);
-
+    
         // Update or create family info record
-        $user->familyInfo()->updateOrCreate([], $input);
-
+        $familyInfo = $user->familyInfo()->updateOrCreate([], $input);
+    
+        // Send notification emails to each kin
+        $this->notifyKins($familyInfo);
+    
         return redirect()->route('user.family.manage')->with('success', 'Family information updated successfully.');
+    }
+    
+    private function notifyKins($familyInfo)
+    {
+        $kins = [
+            ['email' => $familyInfo->kin_email_1, 'relation' => $familyInfo->relation_1],
+            ['email' => $familyInfo->kin_email_2, 'relation' => $familyInfo->relation_2],
+            ['email' => $familyInfo->kin_email_3, 'relation' => $familyInfo->relation_3]
+        ];
+    
+        foreach ($kins as $kin) {
+            if (!empty($kin['email'])) {
+                Mail::to($kin['email'])->send(new KinRegistrationNotification($kin['email'], $kin['relation']));
+            }
+        }
     }
 
     /**

@@ -13,6 +13,15 @@
     <!-- Conditional Links -->
     @if(Auth::user()->role === 'user')
         <!-- Link visible to regular users -->
+
+        <!-- User Guide Link -->
+        <x-sidebar.link
+        title="System overview"
+        href="{{ route('user.guide') }}"
+        :isActive="request()->routeIs('user.guide')"
+    >
+        </x-sidebar.link>
+
         <x-sidebar.link
             title="Credentials"
             href="{{ route('credentials.index') }}"
@@ -27,6 +36,7 @@
             :isActive="request()->routeIs('user.family.manage')"
         >
         </x-sidebar.link>
+
     @endif
 
     @if(Auth::user()->role === 'admin')

@@ -8,6 +8,7 @@ use App\Http\Controllers\CredentialController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\SuperAdminController;
 use App\Http\Controllers\CredentialAccessController;
+use App\Http\Controllers\UserGuideController;  
 
 // Home route
 Route::get('/', function () {
@@ -20,7 +21,6 @@ require __DIR__.'/auth.php';
 // Unified Dashboard Route for different user roles
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [HomeController::class, 'handleDashboard'])->name('user.dashboard');
-
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile/destroy', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -38,6 +38,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return view('auth.qr-code-verify');
     })->name('mfa.verifyQrCodeForm');
     Route::post('mfa/verify-qr-code', [AuthenticatedSessionController::class, 'verifyQrCode'])->name('mfa.submitQrCodeVerification');
+
+    // User Guide Route
+    Route::get('/user-guide', [UserGuideController::class, 'index'])->name('user.guide');
 });
 
 // Admin-specific Routes
@@ -59,7 +62,7 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
 Route::middleware(['auth', 'verified', 'superadmin'])->group(function () {
     Route::get('/superadmin/dashboard', [SuperAdminController::class, 'index'])->name('superadmin.dashboard');
     Route::get('/superadmin/family-info', [SuperAdminController::class, 'viewFamilyInfo'])->name('superadmin.family.index');
-    Route::put('/superadmin/family-info/{id}/verify', [SuperAdminController::class, 'verifyFamilyInfo'])->name('superadmin.family.verify'); // Added verification route
+    Route::put('/superadmin/family-info/{id}/verify', [SuperAdminController::class, 'verifyFamilyInfo'])->name('superadmin.family.verify');
 });
 
 // Route for close kin to access credentials

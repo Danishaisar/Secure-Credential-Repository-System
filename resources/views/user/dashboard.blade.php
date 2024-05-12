@@ -19,20 +19,23 @@
                     </div>
                 </div>
 
-                <div class="bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition duration-500 ease-in-out" style="box-shadow: 11px 11px 22px #b8b8b8, -11px -11px 22px #ffffff;">
-                    <div class="p-6">
-                        <h2 class="text-2xl font-bold text-gray-800">Stored Credentials</h2>
-                        <p class="text-xl font-semibold text-blue-800">Credentials: {{ Auth::user()->credentials->count() }}</p>
-                        @forelse (Auth::user()->credentials as $credential)
-                            <div class="flex justify-between items-center mt-4">
-                                <span class="font-semibold text-gray-800">{{ $credential->name }}</span>
-                                <span class="text-gray-600">{{ $credential->username }} - {{ str_repeat('*', strlen($credential->password)) }}</span>
-                            </div>
-                        @empty
-                            <p class="text-gray-500">No credentials stored yet.</p>
-                        @endforelse
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition duration-500 ease-in-out" style="box-shadow: 11px 11px 22px #b8b8b8, -11px -11px 22px #ffffff;">
+            <div class="p-6">
+                <h2 class="text-2xl font-bold text-gray-800">Stored Credentials</h2>
+                <p class="text-xl font-semibold text-blue-800">Credentials: {{ Auth::user()->credentials->count() }}</p>
+                @forelse (Auth::user()->credentials as $credential)
+                    <div class="flex justify-between items-center mt-4">
+                        <span class="font-semibold text-gray-800">{{ $credential->name }}</span>
+                        <div class="flex items-center">
+                            <span class="text-gray-600 mr-2">{{ $credential->username }} - {{ str_repeat('*', strlen($credential->password)) }}</span>
+                            <img src="{{ asset('images/icon8.png') }}" alt="Credential Icon" style="width: 20px; height: 20px;">
+                        </div>
                     </div>
-                </div>
+                @empty
+                    <p class="text-gray-500">No credentials stored yet.</p>
+                @endforelse
+            </div>
+        </div>
 
                 <div class="bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition duration-500 ease-in-out" style="box-shadow: 11px 11px 22px #b8b8b8, -11px -11px 22px #ffffff;">
                     <div class="p-6">
@@ -41,21 +44,31 @@
                             <p>Kin 1: <strong>{{ Auth::user()->familyInfo->kin_email_1 }}</strong> ({{ Auth::user()->familyInfo->relation_1 }})</p>
                             <p>Kin 2: <strong>{{ Auth::user()->familyInfo->kin_email_2 }}</strong> ({{ Auth::user()->familyInfo->relation_2 }})</p>
                             <p>Kin 3: <strong>{{ Auth::user()->familyInfo->kin_email_3 }}</strong> ({{ Auth::user()->familyInfo->relation_3 }})</p>
-                            <p class="text-lg font-semibold {{ Auth::user()->familyInfo->verified ? 'text-green-500' : 'text-red-500' }}">
-                                Status: {{ Auth::user()->familyInfo->verified ? 'Verified' : 'Not Verified' }}
+                            <p class="text-lg font-semibold {{ Auth::user()->familyInfo->verified ? 'text-green-500' : 'text-red-500' }}" style="display: flex; align-items: center;">
+                            Status:
+                            @if (Auth::user()->familyInfo->verified)
+                            <span style="display: inline-flex; align-items: center; margin-left: 5px;">
+                            Verified
+                            <img src="{{ asset('images/icon7.png') }}" alt="Verified Icon" style="width: 20px; height: 20px; margin-left: 5px;">
+                            </span>
+                             @else
+                                Not Verified
+                             @endif
                             </p>
-                        @else
-                            <p class="text-gray-500">No family information available.</p>
+
                         @endif
                     </div>
                 </div>
 
                 <div class="bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition duration-500 ease-in-out" style="box-shadow: 11px 11px 22px #b8b8b8, -11px -11px 22px #ffffff;">
-                    <div class="p-6">
-                        <h2 class="text-2xl font-bold text-gray-800">Security Settings</h2>
-                        <p class="text-lg font-semibold text-gray-800">{{ Auth::user()->google2fa_secret ? '2FA is enabled' : 'Not enabled' }}</p>
-                    </div>
-                </div>
+    <div class="p-6 flex justify-between items-center">
+        <div>
+            <h2 class="text-2xl font-bold text-gray-800">Security Settings</h2>
+            <p class="text-lg font-semibold text-gray-800">{{ Auth::user()->google2fa_secret ? 'Multifactor Authentication is enabled' : 'Not enabled' }}</p>
+        </div>
+        <img src="{{ asset('images/icon4.png') }}" alt="Security Icon" style="width: 50px; height: 50px;">
+    </div>
+</div>
             </div>
         </div>
     </div>

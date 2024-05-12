@@ -9,9 +9,6 @@ use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\CredentialUpdatedNotification;
 
-
-
-
 class CredentialController extends Controller
 {
     public function __construct()
@@ -19,10 +16,19 @@ class CredentialController extends Controller
         $this->middleware('auth');
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $credentials = Auth::user()->credentials()->get();
-        return view('credentials.index', compact('credentials'));
+        $search = $request->input('search');
+        $credentials = Auth::user()->credentials()
+                         ->when($search, function ($query) use ($search) {
+                             return $query->where(function($query) use ($search) {
+                                 $query->where('name', 'like', '%' . $search . '%')
+                                       ->orWhere('description', 'like', '%' . $search . '%');
+                             });
+                         })
+                         ->get();
+    
+        return view('credentials.index', compact('credentials', 'search'));
     }
 
     public function create()

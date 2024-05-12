@@ -1,44 +1,52 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <h2 class="text-2xl font-bold leading-tight">
-                {{ __('Create New Credential') }}
-            </h2>
+        <div class="flex justify-between items-center bg-gradient-to-r from-purple-500 to-purple-800 p-6 shadow-xl text-white rounded-lg">
+            <h1 class="text-3xl font-bold">{{ __('Create New Credential') }}</h1>
+            <div class="flex justify-end">
+                <a href="{{ route('credentials.index') }}" class="bg-white hover:bg-gray-100 text-purple-600 font-bold py-2 px-4 rounded-full shadow transition-transform transform hover:scale-110 duration-300">
+                    &larr; Back
+                </a>
+            </div>
         </div>
     </x-slot>
 
-    <div class="container mx-auto px-4 py-8">
-        <div class="max-w-xl mx-auto bg-white rounded-lg overflow-hidden shadow-md">
+    <div class="container mx-auto p-8">
+        <div class="max-w-4xl mx-auto bg-white rounded-lg overflow-hidden shadow-lg">
             <form action="{{ route('credentials.store') }}" method="POST">
                 @csrf
 
-                <div class="p-6">
-                    <div class="mb-6">
-                        <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
-                        <input type="text" name="name" id="name" value="{{ old('name') }}" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                    </div>
+                <div class="p-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Service Information -->
+                        <div class="space-y-6">
+                            <h3 class="text-lg font-medium text-gray-900">Service Information</h3>
+                            <div>
+                                <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
+                                <input type="text" name="name" id="name" value="{{ old('name') }}" class="form-input mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring focus:ring-purple-500 focus:ring-opacity-50">
+                            </div>
+                            <div>
+                                <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+                                <textarea name="description" id="description" rows="3" class="form-textarea mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring focus:ring-purple-500 focus:ring-opacity-50"></textarea>
+                            </div>
+                        </div>
 
-                    <div class="mb-6">
-                        <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
-                        <textarea name="description" id="description" rows="3" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">{{ old('description') }}</textarea>
-                    </div>
-
-                    <div class="mb-6">
-                        <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
-                        <input type="text" name="username" id="username" value="{{ old('username') }}" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                    </div>
-
-                    <div class="mb-6">
-                        <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
-                        <input type="password" name="password" id="password" value="{{ old('password') }}" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        <!-- Account Details -->
+                        <div class="space-y-6">
+                            <h3 class="text-lg font-medium text-gray-900">Account Details</h3>
+                            <div>
+                                <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
+                                <input type="text" name="username" id="username" value="{{ old('username') }}" class="form-input mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring focus:ring-purple-500 focus:ring-opacity-50">
+                            </div>
+                            <div>
+                                <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                                <input type="password" name="password" id="password" value="{{ old('password') }}" class="form-input mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring focus:ring-purple-500 focus:ring-opacity-50">
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="flex justify-between bg-gray-100 px-6 py-4">
-                    <a href="{{ route('credentials.index') }}" class="text-indigo-600 hover:text-indigo-900">
-                        &larr; Back
-                    </a>
-                    <button type="submit" class="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-yellow-500 hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500">
+                <div class="px-4 py-4 bg-gray-100 text-right rounded-b-lg">
+                    <button type="submit" class="bg-white hover:bg-gray-100 text-purple-600 font-bold py-2 px-4 rounded-full shadow transition-transform transform hover:scale-110 duration-300">
                         Create Credential
                     </button>
                 </div>

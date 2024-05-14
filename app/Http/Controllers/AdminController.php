@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Mail\SendCredentialAccessLink;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Feedback;
 
 class AdminController extends Controller
 {
@@ -99,5 +100,12 @@ class AdminController extends Controller
     }
 
     return back()->with('success', 'User marked as deceased successfully.');
+}
+
+// New method to display feedback
+public function showFeedback()
+{
+    $feedbacks = Feedback::all(); // Fetch all feedback
+    return view('admin.feedback.index', compact('feedbacks'));
 }
 }

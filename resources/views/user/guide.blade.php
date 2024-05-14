@@ -6,10 +6,17 @@
         </div>
     </x-slot>
 
-
     <!-- Container -->
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <!-- Session Message for Feedback Submission -->
+            @if(session('success'))
+                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-6" role="alert">
+                    <strong class="font-bold">Success!</strong>
+                    <span class="block sm:inline">{{ session('success') }}</span>
+                </div>
+            @endif
+
             <!-- Introduction Card -->
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg mb-6 transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-110">
                 <div class="p-6 bg-gray-100 border-b border-gray-200">
@@ -56,12 +63,26 @@
             </div>
 
             <!-- Deceased Transfer Card -->
-            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-110">
+            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg mb-6 transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-110">
                 <div class="p-6 bg-gray-100 border-b border-gray-200">
                     <h2 class="font-semibold text-xl text-gray-800 leading-tight mb-4">Credential Transfer on Decease</h2>
                     <p class="text-gray-700">
                         Upon a user's decease, their credentials are securely transferred to the designated kin through a protected process, ensuring data integrity and privacy.
                     </p>
+                </div>
+            </div>
+
+            <!-- Feedback Form Card -->
+            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg mb-12 transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-110">
+                <div class="p-6 bg-gray-100 border-b border-gray-200">
+                    <h2 class="font-semibold text-xl text-gray-800 leading-tight mb-4">Customer Feedback</h2>
+                    <form action="{{ route('feedback.submit') }}" method="POST">
+                        @csrf
+                        <textarea name="feedback" class="form-textarea mt-1 block w-full rounded-md shadow-sm" rows="4" placeholder="Enter your feedback here..."></textarea>
+                        <button type="submit" class="bg-white hover:bg-gray-100 text-purple-600 font-bold py-2 px-4 rounded-full shadow transition-transform transform hover:scale-110 duration-300">
+                            Submit Feedback
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>

@@ -24,7 +24,8 @@ class User extends Authenticatable
         'mfa_expires_at',     // Handles MFA code expiration
         'google2fa_secret',   // Stores the Google 2FA secret key
         'secure_token',       // Secure token for close kin access
-        'token_expires_at'    // Expiration time for the secure token
+        'token_expires_at',    // Expiration time for the secure token
+        'mfa_verified'
     ];
 
     protected $hidden = [
@@ -38,7 +39,8 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'mfa_expires_at' => 'datetime', // Ensures proper casting for datetime
         'token_expires_at' => 'datetime', // Casting token expiration as datetime
-        'google2fa_secret' => 'string' // Ensures google2fa_secret is handled as a string
+        'google2fa_secret' => 'string', // Ensures google2fa_secret is handled as a string
+        'mfa_verified' => 'boolean'
     ];
 
     public function credentials()

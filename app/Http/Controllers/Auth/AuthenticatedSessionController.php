@@ -14,8 +14,6 @@ use Illuminate\View\View;
 use Carbon\Carbon;
 use PragmaRX\Google2FAQRCode\Google2FA;
 
-use App\Http\Controllers\HomeController; // Corrected import
-
 class AuthenticatedSessionController extends Controller
 {
     /**

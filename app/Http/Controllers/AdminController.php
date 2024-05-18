@@ -108,7 +108,7 @@ class AdminController extends Controller
             $link = route('kin.access', ['user' => $user->id, 'token' => $token]);
 
             // Correctly pass the array of emails
-            Mail::to($emails)->send(new SendCredentialAccessLink($user, $link));
+            Mail::to($emails)->send(new SendCredentialAccessLink($emails, $link, $user->name));
 
             return back()->with('success', 'User marked as deceased and secure link sent to close kin.');
         }
@@ -116,7 +116,7 @@ class AdminController extends Controller
         return back()->with('success', 'User marked as deceased successfully.');
     }
 
-    // New method to show feedback
+    // Method to show feedback
     public function showFeedback()
     {
         $feedbacks = Feedback::all(); // Ensure you have a Feedback model and it's imported

@@ -9,7 +9,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\SuperAdminController;
 use App\Http\Controllers\CredentialAccessController;
 use App\Http\Controllers\UserGuideController;
-use App\Http\Controllers\AuditLogController; // Add this line to import the AuditLogController
+use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\FeedbackController;
 
 // Home route
@@ -26,7 +26,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile/destroy', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    
+
     // Family Information Management Routes
     Route::get('/user/family', [ProfileController::class, 'manageFamily'])->name('user.family.manage');
     Route::put('/user/family', [ProfileController::class, 'updateFamilyInfo'])->name('user.family.update');
@@ -65,7 +65,9 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     // Audit Log Routes for Admins
     Route::get('/admin/audit-logs', [AuditLogController::class, 'index'])->name('admin.audit_logs.index');
     Route::get('/admin/audit-logs/{id}', [AuditLogController::class, 'show'])->name('admin.audit_logs.show');
-    Route::get('/admin/feedback', [AdminController::class, 'showFeedback'])->name('admin.feedback.index'); // New route for admin to view feedback
+    
+    // Feedback Route for Admins
+    Route::get('/admin/feedback', [AdminController::class, 'showFeedback'])->name('admin.feedback.index');
 });
 
 // SuperAdmin-specific Routes
@@ -80,4 +82,6 @@ Route::get('/kin/access/{user}/{token}', [CredentialAccessController::class, 'ac
 
 // Route for close kin to access credentials and show secure credentials
 Route::get('/kin/secure-credentials/{user}/{token}', [CredentialAccessController::class, 'showSecureCredentials'])->name('kin.secureCredentials');
- 
+
+// Route to logout
+Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');

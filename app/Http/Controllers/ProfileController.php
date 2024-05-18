@@ -10,15 +10,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use App\Helpers\AuditLogHelper; // Import the AuditLogHelper
 
 class ProfileController extends Controller
 {
-    /**
-     * Display the user's profile form.
-     *
-     * @param Request $request
-     * @return View
-     */
     public function edit(Request $request): View
     {
         $user = $request->user();
@@ -30,12 +25,6 @@ class ProfileController extends Controller
         ]);
     }
 
-    /**
-     * Update the user's profile information.
-     *
-     * @param ProfileUpdateRequest $request
-     * @return RedirectResponse
-     */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
         $user = $request->user();
@@ -55,14 +44,12 @@ class ProfileController extends Controller
             'additional_info'
         ]));
 
+        // Log the action
+        AuditLogHelper::log('Updated profile', "Updated profile for user: {$user->email}");
+
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
 
-    /**
-     * Display the form to manage family information.
-     *
-     * @return View
-     */
     public function manageFamily()
     {
         $user = Auth::user();
@@ -74,22 +61,16 @@ class ProfileController extends Controller
         ]);
     }
 
-    /**
-     * Update the user's family information.
-     *
-     * @param Request $request
-     * @return RedirectResponse
-     */
     public function updateFamilyInfo(Request $request): RedirectResponse
     {
         $user = Auth::user();
         $input = $request->validate([
             'kin_email_1' => 'nullable|email|max:255',
-            'relation_1' => 'nullable|string|max:255', // Validation for relation_1
+            'relation_1' => 'nullable|string|max:255',
             'kin_email_2' => 'nullable|email|max:255',
-            'relation_2' => 'nullable|string|max:255', // Validation for relation_2
+            'relation_2' => 'nullable|string|max:255',
             'kin_email_3' => 'nullable|email|max:255',
-            'relation_3' => 'nullable|string|max:255', // Validation for relation_3
+            'relation_3' => 'nullable|string|max:255',
             'additional_info' => 'nullable|string|max:1000'
         ]);
     
@@ -98,6 +79,9 @@ class ProfileController extends Controller
     
         // Send notification emails to each kin
         $this->notifyKins($familyInfo);
+
+        // Log the action
+        AuditLogHelper::log('Updated family info', "Updated family info for user: {$user->email}");
     
         return redirect()->route('user.family.manage')->with('success', 'Family information updated successfully.');
     }
@@ -117,12 +101,6 @@ class ProfileController extends Controller
         }
     }
 
-    /**
-     * Delete the user's account.
-     *
-     * @param Request $request
-     * @return RedirectResponse
-     */
     public function destroy(Request $request): RedirectResponse
     {
         $request->validateWithBag('userDeletion', [
@@ -137,6 +115,9 @@ class ProfileController extends Controller
             $request->session()->invalidate();
             $request->session()->regenerateToken();
         }
+
+        // Log the action
+        AuditLogHelper::log('Deleted user', "Deleted user with email: {$user->email}");
 
         return Redirect::to('/');
     }

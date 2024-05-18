@@ -8,7 +8,8 @@ use App\Http\Controllers\CredentialController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\SuperAdminController;
 use App\Http\Controllers\CredentialAccessController;
-use App\Http\Controllers\UserGuideController;  
+use App\Http\Controllers\UserGuideController;
+use App\Http\Controllers\AuditLogController; // Add this line to import the AuditLogController
 
 // Home route
 Route::get('/', function () {
@@ -56,6 +57,10 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::post('/admin/users/{user}/deceased', [AdminController::class, 'markUserAsDeceased'])->name('admin.users.deceased');
     Route::get('/admin/credentials/{credential}', [AdminController::class, 'showCredentialDetails'])->name('admin.credentials.show');
     Route::get('/admin/users/{user}/credentials', [AdminController::class, 'showCredentials'])->name('admin.users.credentials.show');
+
+    // Audit Log Routes for Admins
+    Route::get('/admin/audit-logs', [AuditLogController::class, 'index'])->name('admin.audit_logs.index');
+    Route::get('/admin/audit-logs/{id}', [AuditLogController::class, 'show'])->name('admin.audit_logs.show');
 });
 
 // SuperAdmin-specific Routes
@@ -70,3 +75,4 @@ Route::get('/kin/access/{user}/{token}', [CredentialAccessController::class, 'ac
 
 // Route for close kin to access credentials and show secure credentials
 Route::get('/kin/secure-credentials/{user}/{token}', [CredentialAccessController::class, 'showSecureCredentials'])->name('kin.secureCredentials');
+ 

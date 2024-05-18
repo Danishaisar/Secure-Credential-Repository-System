@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\FamilyInfo; // Make sure to import the FamilyInfo model
+use App\Models\FamilyInfo;
+use App\Helpers\AuditLogHelper; // Import the AuditLogHelper
 
 class SuperAdminController extends Controller
 {
@@ -16,6 +17,9 @@ class SuperAdminController extends Controller
 
     public function index()
     {
+        // Log the action
+        AuditLogHelper::log('Accessed super admin dashboard');
+
         return view('superadmin.dashboard'); // Dashboard view for superadmins
     }
 
@@ -28,6 +32,9 @@ class SuperAdminController extends Controller
     {
         // Fetch all family information
         $familyInfos = FamilyInfo::all();
+
+        // Log the action
+        AuditLogHelper::log('Viewed family information', 'Viewed all family info entries');
 
         // Return the superadmin family info view with the familyInfos data
         return view('superadmin.family.index', compact('familyInfos'));
@@ -46,6 +53,9 @@ class SuperAdminController extends Controller
         $familyInfo = FamilyInfo::findOrFail($id);
         $familyInfo->verified = true;
         $familyInfo->save();
+
+        // Log the action
+        AuditLogHelper::log('Verified family info', "Verified family info entry ID: {$id}");
 
         // Redirect back with a success message
         return redirect()->route('superadmin.family.index')->with('status', 'Family info verified successfully!');

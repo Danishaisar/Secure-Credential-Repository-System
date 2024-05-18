@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Mail\SendCredentialAccessLink;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
+use App\Helpers\AuditLogHelper; // Import the AuditLogHelper
 
 class AdminController extends Controller
 {
@@ -17,7 +18,6 @@ class AdminController extends Controller
 
         return view('user.index', compact('users', 'deceasedUsers'));
     }
-
 
     public function create()
     {
@@ -37,6 +37,9 @@ class AdminController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
+
+        // Log the action
+        AuditLogHelper::log('Created user', "Created user with email: {$request->email}");
 
         return redirect()->route('admin.users.index')->with('success', 'User created successfully.');
     }
@@ -59,12 +62,20 @@ class AdminController extends Controller
         ]);
 
         $user->update($request->only('name', 'email'));
+
+        // Log the action
+        AuditLogHelper::log('Updated user', "Updated user with email: {$user->email}");
+
         return redirect()->route('admin.users.index')->with('success', 'User updated successfully.');
     }
 
     public function destroy(User $user)
     {
         $user->delete();
+
+        // Log the action
+        AuditLogHelper::log('Deleted user', "Deleted user with email: {$user->email}");
+
         return back()->with('success', 'User deleted successfully.');
     }
 
@@ -75,29 +86,32 @@ class AdminController extends Controller
     }
 
     public function markUserAsDeceased(User $user)
-{
-    $user->is_deceased = true;
-    $user->save();
+    {
+        $user->is_deceased = true;
+        $user->save();
 
-    $familyInfo = $user->familyInfo;
-    if ($familyInfo) {
-        $emails = collect([$familyInfo->kin_email_1, $familyInfo->kin_email_2, $familyInfo->kin_email_3])
-                    ->filter()
-                    ->all();  // Collect and convert to array
+        // Log the action
+        AuditLogHelper::log('Marked user as deceased', "Marked user with email: {$user->email} as deceased");
 
-        if (empty($emails)) {
-            return back()->with('error', 'No kin emails available to send the credentials.');
+        $familyInfo = $user->familyInfo;
+        if ($familyInfo) {
+            $emails = collect([$familyInfo->kin_email_1, $familyInfo->kin_email_2, $familyInfo->kin_email_3])
+                        ->filter()
+                        ->all();  // Collect and convert to array
+
+            if (empty($emails)) {
+                return back()->with('error', 'No kin emails available to send the credentials.');
+            }
+
+            $token = $user->generateSecureAccessLink();
+            $link = route('kin.access', ['user' => $user->id, 'token' => $token]);
+
+            // Correctly pass the array of emails
+            Mail::to($emails)->send(new SendCredentialAccessLink($emails, $link, $user->name));
+
+            return back()->with('success', 'User marked as deceased and secure link sent to close kin.');
         }
 
-        $token = $user->generateSecureAccessLink();
-        $link = route('kin.access', ['user' => $user->id, 'token' => $token]);
-
-        // Correctly pass the array of emails
-        Mail::to($emails)->send(new SendCredentialAccessLink($emails, $link, $user->name));
-
-        return back()->with('success', 'User marked as deceased and secure link sent to close kin.');
+        return back()->with('success', 'User marked as deceased successfully.');
     }
-
-    return back()->with('success', 'User marked as deceased successfully.');
-}
 }

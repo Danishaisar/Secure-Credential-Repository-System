@@ -6,10 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use App\Mail\CredentialsMail; // Ensure this matches the namespace of your mailable
+use App\Mail\CredentialsMail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use App\Helpers\AuditLogHelper; // Import the AuditLogHelper
 
 class User extends Authenticatable
 {
@@ -53,6 +54,9 @@ class User extends Authenticatable
         })->implode("\n");
 
         Mail::to($this->close_kin_email)->send(new CredentialsMail($this, $credentialsForEmail));
+
+        // Log the action
+        AuditLogHelper::log('Sent credentials to close kin', "Sent credentials to {$this->close_kin_email}");
     }
 
     // Generate a secure, one-time use token for close kin access
@@ -63,6 +67,10 @@ class User extends Authenticatable
             'secure_token' => Hash::make($token),
             'token_expires_at' => now()->addHours(24) // token expires in 24 hours
         ]);
+
+        // Log the action
+        AuditLogHelper::log('Generated secure access link', "Generated secure access link for {$this->close_kin_email}");
+
         return $token;
     }
 

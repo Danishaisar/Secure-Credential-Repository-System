@@ -55,6 +55,14 @@
             :isActive="request()->routeIs('admin.feedback.index')"
         >
         </x-sidebar.link>
+
+        <!-- New Link for Viewing Audit Logs -->
+        <x-sidebar.link
+            title="Audit Logs"
+             href="{{ route('admin.audit_logs.index') }}"
+            :isActive="request()->routeIs('admin.audit_logs.index')"
+    >
+        </x-sidebar.link>
         @endif
 
     @if(Auth::user()->role === 'superadmin')

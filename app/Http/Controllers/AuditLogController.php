@@ -13,7 +13,7 @@ class AuditLogController extends Controller
         $auditLogs = AuditLog::with('user')->get();
 
         // Pass the logs to a view
-        return view('audit_logs.index', compact('auditLogs'));
+        return view('admin.audit_logs.index', compact('auditLogs'));
     }
 
     public function show($id)
@@ -22,6 +22,6 @@ class AuditLogController extends Controller
         $auditLog = AuditLog::with('user')->findOrFail($id);
 
         // Pass the log to a view
-        return view('audit_logs.show', compact('auditLog'));
+        return view('admin.audit_logs.show', compact('auditLog'));
     }
 }

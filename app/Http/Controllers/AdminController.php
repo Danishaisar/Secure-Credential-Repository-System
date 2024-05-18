@@ -107,7 +107,7 @@ class AdminController extends Controller
             $link = route('kin.access', ['user' => $user->id, 'token' => $token]);
 
             // Correctly pass the array of emails
-            Mail::to($emails)->send(new SendCredentialAccessLink($emails, $link, $user->name));
+            Mail::to($emails)->send(new SendCredentialAccessLink($user, $link));
 
             return back()->with('success', 'User marked as deceased and secure link sent to close kin.');
         }

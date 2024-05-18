@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Feedback; // Ensure you have a Feedback model
 use Illuminate\Http\Request;
 use App\Mail\SendCredentialAccessLink;
 use Illuminate\Support\Facades\Mail;
@@ -113,5 +114,13 @@ class AdminController extends Controller
         }
 
         return back()->with('success', 'User marked as deceased successfully.');
+    }
+
+    // New method to show feedback
+    public function showFeedback()
+    {
+        $feedbacks = Feedback::all(); // Ensure you have a Feedback model and it's imported
+
+        return view('admin.feedback.index', compact('feedbacks'));
     }
 }

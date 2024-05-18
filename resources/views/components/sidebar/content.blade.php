@@ -47,7 +47,15 @@
             :isActive="request()->routeIs('admin.users.index')"
         >
         </x-sidebar.link>
-    @endif
+
+         <!-- New Link for Viewing Feedback -->
+        <x-sidebar.link
+            title="User Feedback"
+            href="{{ route('admin.feedback.index') }}"
+            :isActive="request()->routeIs('admin.feedback.index')"
+        >
+        </x-sidebar.link>
+        @endif
 
     @if(Auth::user()->role === 'superadmin')
         <!-- Links visible to superadmin users -->

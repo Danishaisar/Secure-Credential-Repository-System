@@ -10,6 +10,7 @@ use App\Http\Controllers\SuperAdminController;
 use App\Http\Controllers\CredentialAccessController;
 use App\Http\Controllers\UserGuideController;
 use App\Http\Controllers\AuditLogController; // Add this line to import the AuditLogController
+use App\Http\Controllers\FeedbackController;
 
 // Home route
 Route::get('/', function () {
@@ -25,7 +26,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile/destroy', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
+    
     // Family Information Management Routes
     Route::get('/user/family', [ProfileController::class, 'manageFamily'])->name('user.family.manage');
     Route::put('/user/family', [ProfileController::class, 'updateFamilyInfo'])->name('user.family.update');
@@ -42,6 +43,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // User Guide Route
     Route::get('/user-guide', [UserGuideController::class, 'index'])->name('user.guide');
+
+    // Feedback submission route
+    Route::post('/submit-feedback', [FeedbackController::class, 'store'])->name('feedback.submit')->middleware('auth');
 });
 
 // Admin-specific Routes
@@ -61,6 +65,7 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     // Audit Log Routes for Admins
     Route::get('/admin/audit-logs', [AuditLogController::class, 'index'])->name('admin.audit_logs.index');
     Route::get('/admin/audit-logs/{id}', [AuditLogController::class, 'show'])->name('admin.audit_logs.show');
+    Route::get('/admin/feedback', [AdminController::class, 'showFeedback'])->name('admin.feedback.index'); // New route for admin to view feedback
 });
 
 // SuperAdmin-specific Routes

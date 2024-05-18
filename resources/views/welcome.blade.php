@@ -176,7 +176,7 @@
     <div class="container mx-auto">
         <div class="hero-section">
             <div>
-                <h1>Welcome to <strong>Secure Credential</strong></h1>
+                <h1><strong>Secure Credential Repository System</strong></h1>
                 <p>Simplify your life with our Secure Credential Repository System. Manage, organize, and transfer your credentials effortlessly. Dive in and register now for seamless security!</p>
 
             </div>

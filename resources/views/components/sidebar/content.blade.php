@@ -16,10 +16,10 @@
 
         <!-- User Guide Link -->
         <x-sidebar.link
-        title="System overview"
-        href="{{ route('user.guide') }}"
-        :isActive="request()->routeIs('user.guide')"
-    >
+            title="System overview"
+            href="{{ route('user.guide') }}"
+            :isActive="request()->routeIs('user.guide')"
+        >
         </x-sidebar.link>
 
         <x-sidebar.link
@@ -37,6 +37,13 @@
         >
         </x-sidebar.link>
 
+        <!-- Complaint Link -->
+        <x-sidebar.link
+            title="Contact Us"
+            href="{{ route('contact.index') }}"
+            :isActive="request()->routeIs('contact.index')"
+        >
+        </x-sidebar.link>
     @endif
 
     @if(Auth::user()->role === 'admin')
@@ -48,7 +55,7 @@
         >
         </x-sidebar.link>
 
-         <!-- New Link for Viewing Feedback -->
+        <!-- New Link for Viewing Feedback -->
         <x-sidebar.link
             title="User Feedback"
             href="{{ route('admin.feedback.index') }}"
@@ -61,9 +68,17 @@
             title="Audit Logs"
              href="{{ route('admin.audit_logs.index') }}"
             :isActive="request()->routeIs('admin.audit_logs.index')"
-    >
+        >
         </x-sidebar.link>
-        @endif
+
+        <!-- Complaint Management Link -->
+        <x-sidebar.link
+            title="Manage Complaints"
+            href="{{ route('admin.complaints.index') }}"
+            :isActive="request()->routeIs('admin.complaints.index')"
+        >
+        </x-sidebar.link>
+    @endif
 
     @if(Auth::user()->role === 'superadmin')
         <!-- Links visible to superadmin users -->

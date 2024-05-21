@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Feedback; // Ensure you have a Feedback model
+use App\Models\Complaint; // Ensure you have a Complaint model
 use Illuminate\Http\Request;
 use App\Mail\SendCredentialAccessLink;
+use App\Mail\ComplaintReplyMail; // Ensure you have ComplaintReplyMail
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
 use App\Helpers\AuditLogHelper; // Import the AuditLogHelper
@@ -122,5 +124,44 @@ class AdminController extends Controller
         $feedbacks = Feedback::all(); // Ensure you have a Feedback model and it's imported
 
         return view('admin.feedback.index', compact('feedbacks'));
+    }
+
+    // Method to show complaints
+    public function showComplaints()
+    {
+        $complaints = Complaint::all();
+
+        return view('admin.complaints.index', compact('complaints'));
+    }
+
+    // Method to show reply form
+    public function showReplyForm(Complaint $complaint)
+    {
+        return view('admin.complaints.reply', compact('complaint'));
+    }
+
+    // Method to delete a complaint
+    public function destroyComplaint(Complaint $complaint)
+    {
+        $complaint->delete();
+
+        return redirect()->route('admin.complaints.index')->with('success', 'Complaint deleted successfully.');
+    }
+
+    // Method to reply to a complaint
+    public function replyToComplaint(Request $request, Complaint $complaint)
+    {
+        $request->validate([
+            'reply' => 'required|string|max:5000',
+        ]);
+
+        // Update the complaint with the reply
+        $complaint->reply = $request->reply;
+        $complaint->save();
+
+        // Send the reply via email to the user
+        Mail::to($complaint->email)->send(new ComplaintReplyMail($request->reply, $complaint->ticket_number));
+
+        return redirect()->route('admin.complaints.index')->with('success', 'Reply sent successfully.');
     }
 }

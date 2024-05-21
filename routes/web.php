@@ -11,6 +11,8 @@ use App\Http\Controllers\CredentialAccessController;
 use App\Http\Controllers\UserGuideController;
 use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\FeedbackController;
+use App\Http\Controllers\ComplaintController;
+use App\Http\Controllers\ContactController;
 
 // Home route
 Route::get('/', function () {
@@ -46,6 +48,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Feedback submission route
     Route::post('/submit-feedback', [FeedbackController::class, 'store'])->name('feedback.submit')->middleware('auth');
+
+    // Contact Us route
+    Route::get('/contact', [ContactController::class, 'index'])->name('contact.index')->middleware('auth');
+    Route::post('/contact', [ContactController::class, 'store'])->name('contact.store')->middleware('auth');
 });
 
 // Admin-specific Routes
@@ -68,6 +74,12 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     
     // Feedback Route for Admins
     Route::get('/admin/feedback', [AdminController::class, 'showFeedback'])->name('admin.feedback.index');
+
+    // Complaints Route for Admins
+    Route::get('/admin/complaints', [AdminController::class, 'showComplaints'])->name('admin.complaints.index');
+    Route::delete('/admin/complaints/{complaint}', [AdminController::class, 'destroyComplaint'])->name('admin.complaints.destroy');
+    Route::get('/admin/complaints/{complaint}/reply', [AdminController::class, 'showReplyForm'])->name('admin.complaints.showReplyForm');
+    Route::post('/admin/complaints/{complaint}/reply', [AdminController::class, 'replyToComplaint'])->name('admin.complaints.reply');
 });
 
 // SuperAdmin-specific Routes

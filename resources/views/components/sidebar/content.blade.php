@@ -47,38 +47,46 @@
     @endif
 
     @if(Auth::user()->role === 'admin')
-        <!-- Links visible to admin users -->
-        <x-sidebar.link
-            title="User Management"
-            href="{{ route('admin.users.index') }}"
-            :isActive="request()->routeIs('admin.users.index')"
-        >
-        </x-sidebar.link>
+    <!-- Links visible to admin users -->
+    <x-sidebar.link
+        title="User Management"
+        href="{{ route('admin.users.index') }}"
+        :isActive="request()->routeIs('admin.users.index')"
+    >
+    </x-sidebar.link>
 
-        <!-- New Link for Viewing Feedback -->
-        <x-sidebar.link
-            title="User Feedback"
-            href="{{ route('admin.feedback.index') }}"
-            :isActive="request()->routeIs('admin.feedback.index')"
-        >
-        </x-sidebar.link>
+    <!-- New Link for Viewing Feedback -->
+    <x-sidebar.link
+        title="User Feedback"
+        href="{{ route('admin.feedback.index') }}"
+        :isActive="request()->routeIs('admin.feedback.index')"
+    >
+    </x-sidebar.link>
 
-        <!-- New Link for Viewing Audit Logs -->
-        <x-sidebar.link
-            title="Audit Logs"
-             href="{{ route('admin.audit_logs.index') }}"
-            :isActive="request()->routeIs('admin.audit_logs.index')"
-        >
-        </x-sidebar.link>
+    <!-- New Link for Viewing Audit Logs -->
+    <x-sidebar.link
+        title="Audit Logs"
+         href="{{ route('admin.audit_logs.index') }}"
+        :isActive="request()->routeIs('admin.audit_logs.index')"
+    >
+    </x-sidebar.link>
 
-        <!-- Complaint Management Link -->
-        <x-sidebar.link
-            title="Manage Complaints"
-            href="{{ route('admin.complaints.index') }}"
-            :isActive="request()->routeIs('admin.complaints.index')"
-        >
-        </x-sidebar.link>
-    @endif
+    <!-- Complaint Management Link -->
+    <x-sidebar.link
+        title="Manage Complaints"
+        href="{{ route('admin.complaints.index') }}"
+        :isActive="request()->routeIs('admin.complaints.index')"
+    >
+    </x-sidebar.link>
+
+    <!-- New Link for Death Certificate Management -->
+    <x-sidebar.link
+        title="Death Certificate Management"
+        href="{{ route('admin.deathCertificates') }}"
+        :isActive="request()->routeIs('admin.deathCertificates')"
+    >
+    </x-sidebar.link>
+@endif
 
     @if(Auth::user()->role === 'superadmin')
         <!-- Links visible to superadmin users -->

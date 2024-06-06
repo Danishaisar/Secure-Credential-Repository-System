@@ -60,6 +60,7 @@
             color: #ffffff;
             background-color: #6D28D9;
             transition: background-color 0.3s ease;
+            margin-right: 10px;
         }
 
         .action-buttons a:hover {
@@ -163,10 +164,22 @@
         }
 
         .action-buttons-container {
-        display: flex; /* Use flexbox to center children */
-        justify-content: center; /* Horizontally center the content */
-        padding-top: 20px;
-        margin-top: 20px; /* Or any other value for spacing from the feature boxes */
+            display: flex; /* Use flexbox to center children */
+            flex-direction: column; /* Change to column direction */
+            align-items: center; /* Center align items */
+            padding-top: 20px;
+            margin-top: 20px; /* Or any other value for spacing from the feature boxes */
+        }
+
+        .close-kin-link {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1rem;
+            margin-top: 10px;
+        }
+
+        .close-kin-link:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -178,7 +191,6 @@
             <div>
                 <h1><strong>Secure Credential Repository System</strong></h1>
                 <p>Simplify your life with our Secure Credential Repository System. Manage, organize, and transfer your credentials effortlessly. Dive in and register now for seamless security!</p>
-
             </div>
             <div class="hero-image">
                 <img src="{{ asset('images/scrs_logo2.png') }}" alt="Secure Credential Logo" class="rounded-lg shadow-lg">
@@ -189,7 +201,7 @@
             <!-- Feature box with Alpine.js for interactivity -->
             <div class="feature-box" x-data="{ open: false }">
                 <div @click="open = !open" class="flex items-center justify-center mb-4 cursor-pointer">
-                <img src="{{ asset('images/icon6.png') }}" alt="Push to Deploy" class="w-16 h-16 mr-2"> <!-- Add your PNG image here -->
+                    <img src="{{ asset('images/icon6.png') }}" alt="Push to Deploy" class="w-16 h-16 mr-2"> <!-- Add your PNG image here -->
                     <i class="fas fa-rocket text-purple-500 text-3xl mr-2"></i>
                     <h3 class="font-bold text-xl">Secure Credential</h3>
                 </div>
@@ -197,13 +209,13 @@
                     Learn more about our seamless deployment process that helps you deliver applications with ease and efficiency.
                 </p>
                 <p x-show="!open">
-                Centralize and manage your credentials with ease using our Secure Credential Repository System (SCRS), streamlining access and enhancing security measures.
+                    Centralize and manage your credentials with ease using our Secure Credential Repository System (SCRS), streamlining access and enhancing security measures.
                 </p>
             </div>
 
             <div class="feature-box" x-data="{ open: false }">
                 <div @click="open = !open" class="flex items-center justify-center mb-4 cursor-pointer">
-                <img src="{{ asset('images/icon4.png') }}" alt="Push to Deploy" class="w-16 h-16 mr-2"> <!-- Add your PNG image here -->
+                    <img src="{{ asset('images/icon4.png') }}" alt="Push to Deploy" class="w-16 h-16 mr-2"> <!-- Add your PNG image here -->
                     <i class="fas fa-rocket text-purple-500 text-3xl mr-2"></i>
                     <h3 class="font-bold text-xl">Multifactor Authentication</h3>
                 </div>
@@ -211,13 +223,13 @@
                     Learn more about our seamless deployment process that helps you deliver applications with ease and efficiency.
                 </p>
                 <p x-show="!open">
-                Ensure top-tier security with multiple layers of authentication, safeguarding your data from unauthorized access.
+                    Ensure top-tier security with multiple layers of authentication, safeguarding your data from unauthorized access.
                 </p>
             </div>
 
             <div class="feature-box" x-data="{ open: false }">
                 <div @click="open = !open" class="flex items-center justify-center mb-4 cursor-pointer">
-                <img src="{{ asset('images/icon5.png') }}" alt="Push to Deploy" class="w-16 h-16 mr-2"> <!-- Add your PNG image here -->
+                    <img src="{{ asset('images/icon5.png') }}" alt="Push to Deploy" class="w-16 h-16 mr-2"> <!-- Add your PNG image here -->
                     <i class="fas fa-rocket text-purple-500 text-3xl mr-2"></i>
                     <h3 class="font-bold text-xl">Safely Encrypted</h3>
                 </div>
@@ -225,26 +237,21 @@
                     Learn more about our seamless deployment process that helps you deliver applications with ease and efficiency.
                 </p>
                 <p x-show="!open">
-                Rest easy knowing your credentials are protected with robust encryption, keeping them safe from prying eyes.
+                    Rest easy knowing your credentials are protected with robust encryption, keeping them safe from prying eyes.
                 </p>
             </div>
-</div>
-
-            <!-- Repeat the structure for other feature boxes -->
-            <!-- ... -->
-
         </div>
-        
+
         <div class="action-buttons-container">
-        <div class="action-buttons">
-        <a href="{{ route('login') }}" class="btn-primary">Log in</a>
-        @if (Route::has('register'))
-            <a href="{{ route('register') }}" class="btn-secondary ml-2">Register</a>
-        @endif
+            <div class="action-buttons">
+                <a href="{{ route('login') }}" class="btn-primary">Log in</a>
+                @if (Route::has('register'))
+                    <a href="{{ route('register') }}" class="btn-secondary ml-2">Register</a>
+                @endif
+            </div>
+            <a href="{{ route('kin.deathCertificate') }}" class="close-kin-link">Are you a close kin to somebody? Submit Death Certificate</a>
+        </div>
     </div>
-</div>
-    </div>
-    
 </div>
 
 </body>

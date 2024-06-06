@@ -126,7 +126,7 @@
     </div>
 @endforeach
     <div class="footer">
-        Please contact support@example.com if you have any issues or questions.
+        Please contact scrs@support.com if you have any issues or questions.
     </div>
 </div>
 <script>

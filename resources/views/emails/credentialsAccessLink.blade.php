@@ -47,7 +47,7 @@
         </button>
         <p>This link will expire in 24 hours.</p>
         <div class="footer">
-            <p>If you have any questions or did not expect to receive this information, please contact our support team immediately at <a href="mailto:support@example.com">support@example.com</a>.</p>
+            <p>If you have any questions or did not expect to receive this information, please contact our support team immediately at <a href="mailto:support@example.com">scrs@support.com</a>.</p>
         </div>
     </div>
 </body>

@@ -3,25 +3,45 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Models\Feedback; // Ensure you have a Feedback model
-use App\Models\Complaint; // Ensure you have a Complaint model
-use Illuminate\Http\Request;
+use App\Models\Feedback;
+use App\Models\Complaint;
+use App\Models\DeathCertificate; 
 use App\Mail\SendCredentialAccessLink;
-use App\Mail\ComplaintReplyMail; // Ensure you have ComplaintReplyMail
-use Illuminate\Support\Facades\Mail;
+use App\Mail\DeathCertificateVerifiedMail; 
+use Illuminate\Support\Facades\Mail; 
 use Illuminate\Support\Facades\Hash;
-use App\Helpers\AuditLogHelper; // Import the AuditLogHelper
+use Illuminate\Http\Request;
+use App\Helpers\AuditLogHelper; 
 
 class AdminController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::where('role', '<>', 'admin')->where('is_deceased', false)->get();
-        $deceasedUsers = User::where('is_deceased', true)->get(); // Fetching deceased users
+        $search = $request->input('search');
 
-        return view('user.index', compact('users', 'deceasedUsers'));
+        $users = User::where('role', 'user')
+            ->where('is_deceased', false)
+            ->when($search, function ($query, $search) {
+                return $query->where(function($query) use ($search) {
+                    $query->where('name', 'like', "%{$search}%")
+                          ->orWhere('email', 'like', "%{$search}%");
+                });
+            })
+            ->get();
+
+        $deceasedUsers = User::where('role', 'user')
+            ->where('is_deceased', true)
+            ->when($search, function ($query, $search) {
+                return $query->where(function($query) use ($search) {
+                    $query->where('name', 'like', "%{$search}%")
+                          ->orWhere('email', 'like', "%{$search}%");
+                });
+            })
+            ->get();
+
+        return view('user.index', compact('users', 'deceasedUsers', 'search'));
     }
-
+    
     public function create()
     {
         return view('user.create');
@@ -163,5 +183,36 @@ class AdminController extends Controller
         Mail::to($complaint->email)->send(new ComplaintReplyMail($request->reply, $complaint->ticket_number));
 
         return redirect()->route('admin.complaints.index')->with('success', 'Reply sent successfully.');
+    }
+
+    // Method to view death certificates
+    public function viewDeathCertificates()
+    {
+        $deathCertificates = DeathCertificate::where('verified', false)->get();
+        return view('admin.deathCertificates', compact('deathCertificates'));
+    }
+
+    // Method to verify death certificates
+    public function verifyDeathCertificate($id)
+    {
+        $deathCertificate = DeathCertificate::findOrFail($id);
+        $deathCertificate->verified = true;
+        $deathCertificate->save();
+
+        // Notify close kin about verification
+        Mail::to($deathCertificate->close_kin_email)->send(new DeathCertificateVerifiedMail($deathCertificate));
+
+        return redirect()->route('admin.deathCertificates')->with('success', 'Death certificate verified successfully.');
+    }
+
+    public function dashboard()
+
+    {
+        $users = User::where('role', '<>', 'admin')->where('is_deceased', false)->get();
+        $deceasedUsers = User::where('is_deceased', true)->get();
+        $pendingDeathCertificatesCount = DeathCertificate::where('verified', false)->count();
+        $recentActivities = AuditLog::latest()->take(3)->get(); // Fetch the latest 3 activities
+
+        return view('admin.dashboard', compact('users', 'deceasedUsers', 'pendingDeathCertificatesCount', 'recentActivities'));
     }
 }

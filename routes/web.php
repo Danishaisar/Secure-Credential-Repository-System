@@ -13,6 +13,7 @@ use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\ComplaintController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\DeathCertificateController; // Add this import
 
 // Home route
 Route::get('/', function () {
@@ -56,7 +57,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 // Admin-specific Routes
 Route::middleware(['auth', 'verified', 'admin'])->group(function () {
-    Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+    Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
     Route::get('/admin/users', [AdminController::class, 'index'])->name('admin.users.index');
     Route::get('/admin/users/create', [AdminController::class, 'create'])->name('admin.users.create');
     Route::post('/admin/users', [AdminController::class, 'store'])->name('admin.users.store');
@@ -80,6 +81,10 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::delete('/admin/complaints/{complaint}', [AdminController::class, 'destroyComplaint'])->name('admin.complaints.destroy');
     Route::get('/admin/complaints/{complaint}/reply', [AdminController::class, 'showReplyForm'])->name('admin.complaints.showReplyForm');
     Route::post('/admin/complaints/{complaint}/reply', [AdminController::class, 'replyToComplaint'])->name('admin.complaints.reply');
+
+    // Death Certificate Routes for Admins
+    Route::get('/admin/death-certificates', [AdminController::class, 'viewDeathCertificates'])->name('admin.deathCertificates');
+    Route::post('/admin/death-certificates/{id}/verify', [AdminController::class, 'verifyDeathCertificate'])->name('admin.deathCertificates.verify');
 });
 
 // SuperAdmin-specific Routes
@@ -88,6 +93,10 @@ Route::middleware(['auth', 'verified', 'superadmin'])->group(function () {
     Route::get('/superadmin/family-info', [SuperAdminController::class, 'viewFamilyInfo'])->name('superadmin.family.index');
     Route::put('/superadmin/family-info/{id}/verify', [SuperAdminController::class, 'verifyFamilyInfo'])->name('superadmin.family.verify');
 });
+
+// Route for close kin to submit death certificate
+Route::get('/kin/death-certificate', [DeathCertificateController::class, 'create'])->name('kin.deathCertificate');
+Route::post('/kin/death-certificate', [DeathCertificateController::class, 'store'])->name('kin.deathCertificate.store');
 
 // Route for close kin to access credentials
 Route::get('/kin/access/{user}/{token}', [CredentialAccessController::class, 'accessCredentials'])->name('kin.access');

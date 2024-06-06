@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Helpers\AuditLogHelper; // Import the AuditLogHelper
+use App\Models\User;
+use App\Models\DeathCertificate;
+use App\Models\AuditLog;
+use App\Helpers\AuditLogHelper;
 
 class HomeController extends Controller
 {
@@ -39,7 +42,14 @@ class HomeController extends Controller
             // Redirect users who are not admins
             return redirect('/dashboard')->with('error', 'You do not have access to this area.');
         }
-        return view('admin.dashboard');
+
+        // Retrieve necessary data for admin dashboard
+        $users = User::where('role', '!=', 'admin')->where('is_deceased', false)->get();
+        $deceasedUsers = User::where('is_deceased', true)->get();
+        $pendingDeathCertificatesCount = DeathCertificate::where('verified', false)->count();
+        $recentActivities = AuditLog::latest()->take(3)->get();
+
+        return view('admin.dashboard', compact('users', 'deceasedUsers', 'pendingDeathCertificatesCount', 'recentActivities'));
     }
 
     public function superAdminDashboard()

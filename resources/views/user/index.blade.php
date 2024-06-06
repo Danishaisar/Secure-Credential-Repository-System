@@ -7,13 +7,22 @@
         <!-- Header Section -->
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white">{{ __("User Management") }}</h1>
-            <a href="{{ route('admin.users.create') }}" class="flex items-center px-4 py-2 bg-purple-600 hover:bg-purple-700 focus:ring-purple-500 focus:ring-offset-2 focus:outline-none focus:ring-2 transition duration-150 ease-in-out text-white font-semibold rounded-md shadow">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
-                </svg>
-                Add User
+            <a href="{{ route('admin.users.create') }}">
+                <button type="submit" class="bg-white hover:bg-gray-100 text-purple-600 font-bold py-2 px-4 rounded-full shadow transition-transform transform hover:scale-110 duration-300">
+                    Add User
+                </button>
             </a>
         </div>
+
+        <!-- Search Form -->
+        <form method="GET" action="{{ route('admin.users.index') }}" class="mb-6">
+            <div class="flex items-center">
+                <input type="text" name="search" placeholder="Search users..." value="{{ request()->query('search') }}" class="form-input rounded-md shadow-sm mt-1 block w-full">
+                <button type="submit" class="bg-white hover:bg-gray-100 text-purple-600 font-bold py-2 px-4 rounded-full shadow transition-transform transform hover:scale-110 duration-300 ml-4">
+                    Search
+                </button>
+            </div>
+        </form>
 
         <!-- Active Users Table -->
         <div class="bg-white dark:bg-gray-800 overflow-hidden shadow sm:rounded-lg">

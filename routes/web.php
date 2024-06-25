@@ -38,6 +38,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/credentials/{credential}', [CredentialController::class, 'show'])
          ->name('credentials.show')->middleware('can:view,credential');
 
+    Route::post('/credentials/{credential}/encrypt', [CredentialController::class, 'encrypt'])->name('credentials.encrypt'); // Add this line
+    Route::post('/credentials/{credential}/view-encrypted', [CredentialController::class, 'viewEncrypted'])->name('credentials.viewEncrypted');
+
     Route::post('mfa/verify-qr', [AuthenticatedSessionController::class, 'verifyQrCode'])->name('mfa.verifyQr');
     Route::get('mfa/verify-qr-code', function () {
         return view('auth.qr-code-verify');

@@ -28,9 +28,7 @@ class Credential extends Model
         try {
             return Crypt::decryptString($value);
         } catch (\Exception $e) {
-            // Log the exception or handle the error as per your requirements
             \Log::error("Error decrypting password: " . $e->getMessage());
-            // Return an empty string or handle as needed
             return '';
         }
     }

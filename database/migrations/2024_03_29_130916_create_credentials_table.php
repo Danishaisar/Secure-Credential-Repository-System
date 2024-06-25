@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Ensures foreign key constraint with cascading delete
             $table->string('name'); // For the name of the credential
+            $table->string('username'); // Add username field
+            $table->text('password'); // Add password field for encrypted data
             $table->text('description'); // Description of the credential, stored as text
             $table->timestamps(); // Automatically manage created and updated timestamps
         });

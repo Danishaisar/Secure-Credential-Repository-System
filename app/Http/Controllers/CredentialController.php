@@ -122,4 +122,22 @@ class CredentialController extends Controller
 
         return back()->with('success', 'Credential deleted successfully.');
     }
+
+    public function encrypt(Credential $credential)
+    {
+        $this->authorize('update', $credential);
+
+        // Get the decrypted value (handled by the accessor)
+        $decryptedPassword = $credential->password;
+
+        // Get the original encrypted value directly from the database, bypassing the accessor
+        $encryptedPassword = $credential->getRawOriginal('password');
+
+        // Log the action
+        AuditLogHelper::log('Verified encryption', "Verified encrypted password for credential with name: {$credential->name}");
+
+        return redirect()->route('credentials.show', $credential)
+                        ->with('decryptedPassword', $decryptedPassword)
+                        ->with('encryptedPassword', $encryptedPassword);
+    }
 }

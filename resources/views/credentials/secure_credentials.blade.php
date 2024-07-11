@@ -107,6 +107,57 @@
             color: #a0aec0;
             margin-top: 30px;
         }
+
+        .video-container {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .video-container video {
+            width: 100%;
+            max-width: 400px; /* Set a smaller maximum width */
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 1; 
+            padding-top: 60px; 
+            left: 0;
+            top: 0;
+            width: 100%; 
+            height: 100%; 
+            overflow: auto; 
+            background-color: rgb(0,0,0); 
+            background-color: rgba(0,0,0,0.4); 
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%; 
+            max-width: 600px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -124,22 +175,69 @@
             </div>
         </div>
     </div>
-@endforeach
+    @endforeach
+
+    <!-- Video Section -->
+    @if ($user->agreement_video)
+    <div class="video-container">
+        <h2>Agreement Video</h2>
+        <button id="viewVideoBtn">View Video</button>
+    </div>
+    @endif
+
     <div class="footer">
         Please contact scrs@support.com if you have any issues or questions.
     </div>
 </div>
+
+<!-- The Modal -->
+<div id="myModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <video controls>
+        <source src="{{ asset('storage/' . $user->agreement_video) }}" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+  </div>
+</div>
+
 <script>
-   function togglePasswordVisibility(id) {
-    var passwordInput = document.getElementById('password-' + id);
-    if (passwordInput.type === 'password') {
-        passwordInput.type = 'text';
-        event.target.textContent = 'Hide';
-    } else {
-        passwordInput.type = 'password';
-        event.target.textContent = 'Show';
+    function togglePasswordVisibility(id) {
+        var passwordInput = document.getElementById('password-' + id);
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            event.target.textContent = 'Hide';
+        } else {
+            passwordInput.type = 'password';
+            event.target.textContent = 'Show';
+        }
     }
-}
+
+    // Get the modal
+    var modal = document.getElementById("myModal");
+
+    // Get the button that opens the modal
+    var btn = document.getElementById("viewVideoBtn");
+
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+
+    // When the user clicks the button, open the modal 
+    btn.onclick = function() {
+      modal.style.display = "block";
+    }
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+      modal.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    }
 </script>
 </body>
 </html>

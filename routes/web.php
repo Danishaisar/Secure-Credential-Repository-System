@@ -13,7 +13,8 @@ use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\ComplaintController;
 use App\Http\Controllers\ContactController;
-use App\Http\Controllers\DeathCertificateController; // Add this import
+use App\Http\Controllers\DeathCertificateController; 
+use App\Http\Controllers\UserController;
 
 // Home route
 Route::get('/', function () {
@@ -41,6 +42,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/credentials/{credential}/encrypt', [CredentialController::class, 'encrypt'])->name('credentials.encrypt'); // Add this line
     Route::post('/credentials/{credential}/view-encrypted', [CredentialController::class, 'viewEncrypted'])->name('credentials.viewEncrypted');
 
+    // Add this route for checking password strength
+    Route::post('/check-password-strength', [CredentialController::class, 'checkPasswordStrength'])->name('check-password-strength');
+
     Route::post('mfa/verify-qr', [AuthenticatedSessionController::class, 'verifyQrCode'])->name('mfa.verifyQr');
     Route::get('mfa/verify-qr-code', function () {
         return view('auth.qr-code-verify');
@@ -56,6 +60,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Contact Us route
     Route::get('/contact', [ContactController::class, 'index'])->name('contact.index')->middleware('auth');
     Route::post('/contact', [ContactController::class, 'store'])->name('contact.store')->middleware('auth');
+
+    // Route for the Agreement page
+    Route::get('/agreement', [UserController::class, 'agreement'])->name('user.agreement');
+    Route::post('/agreement', [UserController::class, 'storeAgreement'])->name('user.agreement.store');
 });
 
 // Admin-specific Routes

@@ -129,8 +129,8 @@ class AdminController extends Controller
             $token = $user->generateSecureAccessLink();
             $link = route('kin.access', ['user' => $user->id, 'token' => $token]);
 
-            // Correctly pass the array of emails
-            Mail::to($emails)->send(new SendCredentialAccessLink($emails, $link, $user->name));
+            // Correctly pass the array of emails and the video link
+            Mail::to($emails)->send(new SendCredentialAccessLink($emails, $link, $user->name, $user->agreement_video));
 
             return back()->with('success', 'User marked as deceased and secure link sent to close kin.');
         }
@@ -206,7 +206,6 @@ class AdminController extends Controller
     }
 
     public function dashboard()
-
     {
         $users = User::where('role', '<>', 'admin')->where('is_deceased', false)->get();
         $deceasedUsers = User::where('is_deceased', true)->get();

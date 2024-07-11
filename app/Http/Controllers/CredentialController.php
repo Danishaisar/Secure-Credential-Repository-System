@@ -9,6 +9,8 @@ use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\CredentialUpdatedNotification;
 use App\Helpers\AuditLogHelper; // Import the AuditLogHelper
+use ZxcvbnPhp\Zxcvbn;
+use Illuminate\Support\Str;
 
 class CredentialController extends Controller
 {
@@ -58,8 +60,30 @@ class CredentialController extends Controller
     public function show(Credential $credential)
     {
         $this->authorize('view', $credential);
-        return view('credentials.show', compact('credential'));
+        $decryptedPassword = $credential->password;
+
+        // Use zxcvbn to evaluate the password strength
+        $zxcvbn = new Zxcvbn();
+        $strength = $zxcvbn->passwordStrength($decryptedPassword);
+
+        // Determine the status and suggest a stronger password if necessary
+        $status = '';
+        $suggestedPassword = '';
+        if ($strength['score'] < 2) {
+            $status = 'Your password is weak. It is recommended to change this credential password to avoid data breach.';
+            $suggestedPassword = $this->generateStrongPassword($decryptedPassword);
+        } elseif ($strength['score'] < 3) {
+            $status = 'Your password is fair. Consider strengthening your password for better security.';
+            $suggestedPassword = $this->generateStrongPassword($decryptedPassword);
+        } elseif ($strength['score'] < 4) {
+            $status = 'Your password is good. It is quite secure, but there is always room for improvement.';
+        } else {
+            $status = 'Your password is strong. Keep up the good security practices!';
+        }
+
+        return view('credentials.show', compact('credential', 'strength', 'status', 'suggestedPassword'));
     }
+
 
     public function edit(Credential $credential)
     {
@@ -139,5 +163,55 @@ class CredentialController extends Controller
         return redirect()->route('credentials.show', $credential)
                         ->with('decryptedPassword', $decryptedPassword)
                         ->with('encryptedPassword', $encryptedPassword);
+    }
+
+    public function checkPasswordStrength(Request $request)
+    {
+        $password = $request->input('password');
+
+        // Use zxcvbn to evaluate the password
+        $zxcvbn = new Zxcvbn();
+        $strength = $zxcvbn->passwordStrength($password);
+
+        return response()->json($strength);
+    }
+
+    private function generateStrongPassword($currentPassword)
+    {
+        // Replace certain characters to make the password stronger
+        $replacements = [
+            'a' => '@',
+            'i' => '!',
+            'o' => '0',
+            'l' => '1',
+            's' => '$'
+        ];
+
+        $newPassword = strtr($currentPassword, $replacements);
+
+        // Ensure the new password has at least 1 uppercase letter, 1 lowercase letter, 1 digit, and 1 special character
+        if (!preg_match('/[A-Z]/', $newPassword)) {
+            $newPassword .= 'A';
+        }
+        if (!preg_match('/[a-z]/', $newPassword)) {
+            $newPassword .= 'a';
+        }
+        if (!preg_match('/[0-9]/', $newPassword)) {
+            $newPassword .= '1';
+        }
+        if (!preg_match('/[\W]/', $newPassword)) {
+            $newPassword .= '@';
+        }
+
+        // Check if the new password is strong enough
+        $zxcvbn = new Zxcvbn();
+        $strength = $zxcvbn->passwordStrength($newPassword);
+
+        while ($strength['score'] < 3) {
+            $newPassword .= str_shuffle('!@#$%^&*()_+-=0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz')[0];
+            $strength = $zxcvbn->passwordStrength($newPassword);
+        }
+
+        return $newPassword;
     }
 }

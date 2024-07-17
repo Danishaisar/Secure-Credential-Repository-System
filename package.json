@@ -19,6 +19,7 @@
         "vite": "^5.0.0"
     },
     "dependencies": {
+        "build": "^0.1.4",
         "zxcvbn": "^4.4.2"
     }
 }

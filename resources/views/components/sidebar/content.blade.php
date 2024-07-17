@@ -29,6 +29,21 @@
             :isActive="request()->routeIs('credentials.index')"
         >
         </x-sidebar.link>
+
+         <!-- New link for managing documents -->
+         <x-sidebar.link
+            title="Manage Documents"
+            href="{{ route('documents.index') }}"
+            :isActive="request()->routeIs('documents.index')"
+        >
+        </x-sidebar.link>
+
+        <x-sidebar.link
+            title="Manage Assets"
+            href="{{ route('assets.index') }}"
+            :isActive="request()->routeIs('assets.index')"
+        >
+        </x-sidebar.link>
         
         <!-- Family Info Link -->
         <x-sidebar.link

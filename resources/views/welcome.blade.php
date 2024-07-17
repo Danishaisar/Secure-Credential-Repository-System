@@ -90,7 +90,7 @@
 
         .feature-box p {
             font-size: 1rem;
-            color: #666666;
+            color: #999999;
         }
 
         .flex {
@@ -181,6 +181,11 @@
         .close-kin-link:hover {
             text-decoration: underline;
         }
+
+        .kin-link-container {
+            margin-top: 15px;
+            text-align: center;
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -201,21 +206,24 @@
             <!-- Feature box with Alpine.js for interactivity -->
             <div class="feature-box" x-data="{ open: false }">
                 <div @click="open = !open" class="flex items-center justify-center mb-4 cursor-pointer">
-                    <img src="{{ asset('images/icon6.png') }}" alt="Push to Deploy" class="w-16 h-16 mr-2"> <!-- Add your PNG image here -->
+                    <img src="{{ asset('images/icon6.png') }}" alt="Secure Credential" class="w-16 h-16 mr-2">
                     <i class="fas fa-rocket text-purple-500 text-3xl mr-2"></i>
                     <h3 class="font-bold text-xl">Secure Credential</h3>
                 </div>
                 <p x-show="open" x-collapse class="transition-all duration-500" style="display: none;">
-                    Learn more about our seamless deployment process that helps you deliver applications with ease and efficiency.
+                    Learn more about our secure credential management system and how it simplifies your digital life.
                 </p>
                 <p x-show="!open">
-                    Centralize and manage your credentials with ease using our Secure Credential Repository System (SCRS), streamlining access and enhancing security measures.
+                    Ensure your close kin can manage your digital assets securely. Submit a death certificate to transfer access.
                 </p>
+                <div class="kin-link-container">
+                    <a href="{{ route('kin.deathCertificate') }}" class="close-kin-link">Are you a close kin to somebody? Submit Death Certificate</a>
+                </div>
             </div>
 
             <div class="feature-box" x-data="{ open: false }">
                 <div @click="open = !open" class="flex items-center justify-center mb-4 cursor-pointer">
-                    <img src="{{ asset('images/icon4.png') }}" alt="Push to Deploy" class="w-16 h-16 mr-2"> <!-- Add your PNG image here -->
+                    <img src="{{ asset('images/icon4.png') }}" alt="Multifactor Authentication" class="w-16 h-16 mr-2">
                     <i class="fas fa-rocket text-purple-500 text-3xl mr-2"></i>
                     <h3 class="font-bold text-xl">Multifactor Authentication</h3>
                 </div>
@@ -229,7 +237,7 @@
 
             <div class="feature-box" x-data="{ open: false }">
                 <div @click="open = !open" class="flex items-center justify-center mb-4 cursor-pointer">
-                    <img src="{{ asset('images/icon5.png') }}" alt="Push to Deploy" class="w-16 h-16 mr-2"> <!-- Add your PNG image here -->
+                    <img src="{{ asset('images/icon5.png') }}" alt="Safely Encrypted" class="w-16 h-16 mr-2">
                     <i class="fas fa-rocket text-purple-500 text-3xl mr-2"></i>
                     <h3 class="font-bold text-xl">Safely Encrypted</h3>
                 </div>
@@ -249,7 +257,6 @@
                     <a href="{{ route('register') }}" class="btn-secondary ml-2">Register</a>
                 @endif
             </div>
-            <a href="{{ route('kin.deathCertificate') }}" class="close-kin-link">Are you a close kin to somebody? Submit Death Certificate</a>
         </div>
     </div>
 </div>

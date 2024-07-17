@@ -6,8 +6,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use App\Mail\CredentialsMail;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use App\Helpers\AuditLogHelper; // Import the AuditLogHelper
@@ -44,7 +42,7 @@ class User extends Authenticatable
         'token_expires_at' => 'datetime', // Casting token expiration as datetime
         'google2fa_secret' => 'string', // Ensures google2fa_secret is handled as a string
         'mfa_verified' => 'boolean',
-        'selected_kin' => 'array'
+        'selected_kin' => 'array' // Cast selected_kin as array
     ];
 
     public function credentials()

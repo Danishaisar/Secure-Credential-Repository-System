@@ -13,8 +13,10 @@ use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\ComplaintController;
 use App\Http\Controllers\ContactController;
-use App\Http\Controllers\DeathCertificateController; 
+use App\Http\Controllers\DeathCertificateController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\AssetController;
 
 // Home route
 Route::get('/', function () {
@@ -64,6 +66,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Route for the Agreement page
     Route::get('/agreement', [UserController::class, 'agreement'])->name('user.agreement');
     Route::post('/agreement', [UserController::class, 'storeAgreement'])->name('user.agreement.store');
+
+    // New routes for managing Wasiat, Hibah, and Waqf documents
+    Route::resource('documents', DocumentController::class)->except(['show', 'edit', 'update']);
+
+     // New routes for managing assets
+    Route::resource('assets', AssetController::class)->except(['show', 'edit', 'update']);
 });
 
 // Admin-specific Routes

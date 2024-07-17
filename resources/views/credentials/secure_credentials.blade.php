@@ -115,7 +115,7 @@
 
         .video-container video {
             width: 100%;
-            max-width: 400px; /* Set a smaller maximum width */
+            max-width: 400px;
             height: auto;
             border-radius: 8px;
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
@@ -176,6 +176,32 @@
         </div>
     </div>
     @endforeach
+
+    <!-- Documents Section -->
+    <div>
+        <h2>Documents</h2>
+        @foreach ($documents as $document)
+        <div class="card">
+            <div class="card-header">{{ ucfirst($document->type) }}</div>
+            <div class="card-body">
+                <a href="{{ Storage::url($document->document_path) }}" target="_blank" class="text-blue-500 hover:text-blue-700">View Document</a>
+            </div>
+        </div>
+        @endforeach
+    </div>
+
+    <!-- Assets Section -->
+    <div>
+        <h2>Assets</h2>
+        @foreach ($assets as $asset)
+        <div class="card">
+            <div class="card-header">{{ $asset->name }}</div>
+            <div class="card-body">
+                <a href="{{ Storage::url($asset->document_path) }}" target="_blank" class="text-blue-500 hover:text-blue-700">View Asset Document</a>
+            </div>
+        </div>
+        @endforeach
+    </div>
 
     <!-- Video Section -->
     @if ($user->agreement_video)

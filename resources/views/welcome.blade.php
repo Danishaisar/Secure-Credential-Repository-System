@@ -23,10 +23,11 @@
             height: 100%;
             margin: 0;
             font-family: 'Open Sans', sans-serif;
+            background-image: url('{{ asset('images/website_background2.png') }}');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            background-image: url('{{ asset('images/website_background2.png') }}');
+            background-attachment: fixed;
         }
 
         .overlay-bg {

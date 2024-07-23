@@ -8,25 +8,28 @@
     </x-slot>
 
     <div class="container mx-auto px-4 py-8">
-        <div class="max-w-2xl mx-auto bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-xl shadow-xl hover:shadow-2xl transition duration-500 ease-in-out">
-            <div class="p-6">
-                <div class="bg-white p-4 rounded-lg shadow mb-4">
+        <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 p-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Name -->
+                <div class="bg-gradient-to-br from-indigo-50 to-indigo-100 p-4 rounded-lg shadow">
                     <h3 class="text-xl font-bold text-indigo-600">Name:</h3>
                     <p class="text-lg font-medium text-gray-800">{{ $credential->name }}</p>
                 </div>
 
-                <div class="bg-white p-4 rounded-lg shadow mb-4">
+                <!-- Username -->
+                <div class="bg-gradient-to-br from-indigo-50 to-indigo-100 p-4 rounded-lg shadow">
                     <h3 class="text-xl font-bold text-indigo-600">Username:</h3>
                     <p class="text-lg font-medium text-gray-800">{{ $credential->username }}</p>
                 </div>
 
-                <div class="bg-white p-4 rounded-lg shadow mb-4">
+                <!-- Password -->
+                <div class="bg-gradient-to-br from-indigo-50 to-indigo-100 p-4 rounded-lg shadow">
                     <h3 class="text-xl font-bold text-indigo-600">Password:</h3>
                     <p class="text-lg font-medium text-gray-800">[Password is secured]</p>
-                    <div class="flex space-x-2">
+                    <div class="flex space-x-2 mt-2">
                         <form id="encryption-form" action="{{ route('credentials.encrypt', $credential) }}" method="POST">
                             @csrf
-                            <button type="button" class="mt-2 inline-flex items-center justify-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-medium rounded-md transition duration-300" onclick="showLoadingSpinner()">
+                            <button type="button" class="inline-flex items-center justify-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-medium rounded-md transition duration-300" onclick="showLoadingSpinner()">
                                 Verify Encryption
                             </button>
                         </form>
@@ -39,28 +42,30 @@
                         </div>
                     </div>
                 </div>
-                
+
+                <!-- Status -->
                 @if($status)
-                <div class="bg-yellow-100 p-4 rounded-lg shadow mb-4">
+                <div class="bg-yellow-100 p-4 rounded-lg shadow">
                     <h3 class="text-xl font-bold text-yellow-600">Status</h3>
                     <p class="text-lg font-medium text-yellow-800">{{ $status }}</p>
                 </div>
                 @endif
 
+                <!-- Suggested Strong Password -->
                 @if($suggestedPassword)
-                <div class="bg-green-100 p-4 rounded-lg shadow mb-4">
+                <div class="bg-green-100 p-4 rounded-lg shadow">
                     <h3 class="text-xl font-bold text-green-600">Suggested Strong Password</h3>
                     <p class="text-lg font-medium text-green-800">{{ $suggestedPassword }}</p>
                 </div>
                 @endif
             </div>
 
-            <div class="bg-indigo-100 px-6 py-4 flex justify-between items-center rounded-b-xl">
-                <a href="{{ route('credentials.index') }}" class="text-indigo-700 hover:text-indigo-900 transition duration-300">
+            <div class="bg-indigo-100 px-6 py-4 mt-6 flex flex-col md:flex-row justify-between items-center rounded-b-xl">
+                <a href="{{ route('credentials.index') }}" class="text-indigo-700 hover:text-indigo-900 transition duration-300 mb-2 md:mb-0">
                     &larr; Back to List
                 </a>
-                <div class="flex items-center">
-                    <a href="{{ route('credentials.edit', $credential) }}" class="inline-flex items-center justify-center px-4 py-2 mr-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-md transition duration-300">
+                <div class="flex items-center space-x-2">
+                    <a href="{{ route('credentials.edit', $credential) }}" class="inline-flex items-center justify-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-md transition duration-300">
                         Edit
                     </a>
                     <form action="{{ route('credentials.destroy', $credential) }}" method="POST">

@@ -9,7 +9,7 @@
 
     <div class="bg-gradient-to-b from-gray-200 to-gray-300 py-12 min-h-screen">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
                 <!-- Welcome Card -->
                 <div class="bg-white rounded-xl shadow-lg p-6 transform hover:scale-105 transition duration-500 ease-in-out flex items-center justify-between">
                     <div>
@@ -18,7 +18,6 @@
                         <p class="text-sm text-gray-500 mt-2">Account status: Active</p>
                     </div>
                     <div class="flex-shrink-0">
-                        <!-- Replace 'path/to/your/logo.png' with the actual path to your PNG file -->
                         <img src="{{ asset('images/administration.png') }}" alt="Logo" class="w-16 h-16">
                     </div>
                 </div>
@@ -30,11 +29,12 @@
                         <p class="text-2xl font-semibold text-blue-800">{{ $users->count() }}</p>
                     </div>
                     <div class="flex-shrink-0">
-                        <!-- Replace 'path/to/your/logo.png' with the actual path to your PNG file -->
                         <img src="{{ asset('images/user.png') }}" alt="Logo" class="w-16 h-16">
                     </div>
                 </div>
+            </div>
 
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mt-12">
                 <!-- Deceased Users Card -->
                 <div class="bg-white rounded-xl shadow-lg p-6 transform hover:scale-105 transition duration-500 ease-in-out flex items-center justify-between">
                     <div>
@@ -42,7 +42,6 @@
                         <p class="text-2xl font-semibold text-blue-800">{{ $deceasedUsers->count() }}</p>
                     </div>
                     <div class="flex-shrink-0">
-                        <!-- Replace 'path/to/your/logo.png' with the actual path to your PNG file -->
                         <img src="{{ asset('images/obituary.png') }}" alt="Logo" class="w-16 h-16">
                     </div>
                 </div>
@@ -54,7 +53,6 @@
                         <p class="text-2xl font-semibold text-blue-800">{{ $pendingDeathCertificatesCount }}</p>
                     </div>
                     <div class="flex-shrink-0">
-                        <!-- Replace 'path/to/your/logo.png' with the actual path to your PNG file -->
                         <img src="{{ asset('images/document.png') }}" alt="Logo" class="w-16 h-16">
                     </div>
                 </div>

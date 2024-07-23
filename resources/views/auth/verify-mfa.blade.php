@@ -1,6 +1,5 @@
 <x-guest-layout>
     <x-auth-card>
-        
         <!-- Session Status -->
         <x-auth-session-status class="mb-4" :status="session('status')" />
 
@@ -36,14 +35,14 @@
 
                 <!-- Buttons -->
                 <div class="flex justify-between space-x-4">
-                    <x-button class="w-1/3 justify-center gap-2 bg-purple-600 hover:bg-purple-700 text-white">
+                    <x-button class="w-1/3 justify-center gap-2 bg-purple-600 hover:bg-purple-700 text-white text-sm py-2 px-4 whitespace-nowrap">
                         <x-heroicon-o-lock-closed class="w-6 h-6" aria-hidden="true" />
                         <span>{{ __('Verify Code') }}</span>
                     </x-button>
 
                     <!-- Back Button -->
                     <x-button
-                        class="w-1/3 justify-center gap-2 bg-gray-300 hover:bg-gray-400 text-gray-800"
+                        class="w-1/3 justify-center gap-2 bg-gray-300 hover:bg-gray-400 text-gray-800 text-sm py-2 px-4 whitespace-nowrap"
                         onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
                     >
                         <x-heroicon-o-arrow-left class="w-6 h-6" aria-hidden="true" />
